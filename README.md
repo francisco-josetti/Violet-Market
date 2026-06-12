@@ -21,7 +21,7 @@ Violet Market é um marketplace de tecnologia e hardware premium, construído co
 | React Hook Form | 7.77 |
 | motion | 12 (animações) |
 | lucide-react | 0.546 (ícones) |
-| Google Gen AI | 2.4 |
+
 
 ## Funcionalidades
 
@@ -42,7 +42,6 @@ npm install
 
 # 2. Configurar variáveis de ambiente
 # Crie um arquivo .env.local com:
-#   GEMINI_API_KEY=<sua-chave>
 #   NEXT_PUBLIC_SUPABASE_URL=<url>
 #   NEXT_PUBLIC_SUPABASE_ANON_KEY=<key>
 
