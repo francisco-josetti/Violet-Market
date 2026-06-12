@@ -1,0 +1,441 @@
+'use client';
+
+import React, { useState, useMemo, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ShoppingCart, Star, X, ChevronLeft, ChevronRight, SlidersHorizontal, Search } from 'lucide-react';
+import { FilterState } from '../types';
+import { PRODUCTS } from '../data';
+import { useCart } from '../contexts/CartContext';
+import { routes } from '../lib/routes';
+
+export default function CatalogView() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { addToCart } = useCart();
+  const categoriaParam = searchParams.get('categoria');
+
+  const [filters, setFilters] = useState<FilterState>({
+    categories: categoriaParam ? [categoriaParam] : ['Hardware'],
+    priceMin: 0,
+    priceMax: 15000,
+    minRating: 0,
+    sortBy: 'relevance',
+    searchQuery: ''
+  });
+
+  useEffect(() => {
+    if (categoriaParam) {
+      setFilters((prev) => ({
+        ...prev,
+        categories: [categoriaParam],
+      }));
+    }
+  }, [categoriaParam]);
+
+  const categoriesAvailable = ['Hardware', 'Periféricos', 'Áudio High-End', 'Wearables', 'Acessórios'];
+
+  const handleSelectProduct = (productId: string) => {
+    router.push(routes.product(productId));
+  };
+
+  // Handle Category click toggles
+  const handleToggleCategory = (category: string) => {
+    setFilters(prev => {
+      const isSelected = prev.categories.includes(category);
+      let updatedCategories: string[];
+      if (isSelected) {
+        // Toggle off
+        updatedCategories = prev.categories.filter(c => c !== category);
+      } else {
+        // Toggle on
+        updatedCategories = [...prev.categories, category];
+      }
+      return { ...prev, categories: updatedCategories };
+    });
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      categories: [],
+      priceMin: 0,
+      priceMax: 15000,
+      minRating: 0,
+      sortBy: 'relevance',
+      searchQuery: ''
+    });
+  };
+
+  const handleRemoveCategoryChip = (category: string) => {
+    setFilters(prev => ({
+      ...prev,
+      categories: prev.categories.filter(c => c !== category)
+    }));
+  };
+
+  // Get display items with count helper
+  const countByCategoryHelper = (category: string) => {
+    return PRODUCTS.filter(p => p.category === category).length;
+  };
+
+  // Process and Filter Products
+  const processedProducts = useMemo(() => {
+    let result = [...PRODUCTS];
+
+    // Search Query
+    if (filters.searchQuery.trim() !== '') {
+      const query = filters.searchQuery.toLowerCase();
+      result = result.filter(
+        p => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query)
+      );
+    }
+
+    // Category filter
+    if (filters.categories.length > 0) {
+      result = result.filter(p => filters.categories.includes(p.category));
+    }
+
+    // Price query
+    result = result.filter(p => p.price >= filters.priceMin && p.price <= filters.priceMax);
+
+    // Rating Query
+    if (filters.minRating > 0) {
+      result = result.filter(p => p.rating >= filters.minRating);
+    }
+
+    // Sorting query
+    if (filters.sortBy === 'lowestPrice') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (filters.sortBy === 'highestPrice') {
+      result.sort((a, b) => b.price - a.price);
+    } // relevance remains as sorting layout order
+
+    return result;
+  }, [filters]);
+
+  return (
+    <div className="w-full max-w-7xl mx-auto px-6 md:px-16 py-8 flex flex-col lg:flex-row gap-8 animate-fade-in">
+      
+      {/* Sidebar Filters */}
+      <aside className="w-full lg:w-64 shrink-0 flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b border-white/5 pb-2">
+          <h2 className="font-hanken text-lg font-bold text-on-surface flex items-center gap-2">
+            <SlidersHorizontal size={18} className="text-primary" /> Filtros
+          </h2>
+          <button
+            onClick={handleClearFilters}
+            className="font-mono text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
+            id="clear-all-filters"
+          >
+            Limpar Tudo
+          </button>
+        </div>
+
+        {/* Search tool */}
+        <div className="bg-surface-container border border-outline-variant rounded-xl p-3 flex items-center gap-2 focus-within:border-primary transition-colors">
+          <Search size={16} className="text-on-surface-variant" />
+          <input
+            type="text"
+            placeholder="Pesquisar..."
+            className="bg-transparent border-none outline-none text-sm text-on-surface w-full p-0 placeholder:text-on-surface-variant/50 focus:ring-0"
+            value={filters.searchQuery}
+            onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
+            id="catalog-search"
+          />
+          {filters.searchQuery && (
+            <button onClick={() => setFilters(prev => ({ ...prev, searchQuery: '' }))}>
+              <X size={14} className="text-on-surface-variant hover:text-white" />
+            </button>
+          )}
+        </div>
+
+        {/* Categories Checkbox List */}
+        <div className="glass-panel rounded-xl p-4 flex flex-col gap-3">
+          <h3 className="font-mono text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold">
+            CATEGORIAS
+          </h3>
+          <div className="flex flex-col gap-2.5">
+            {categoriesAvailable.map((category) => {
+              const checked = filters.categories.includes(category);
+              return (
+                <label
+                  key={category}
+                  className="flex items-center gap-3 cursor-pointer group select-none text-sm"
+                  id={`cat-label-${category}`}
+                >
+                  <div
+                    onClick={() => handleToggleCategory(category)}
+                    className={`relative flex items-center justify-center w-5 h-5 rounded border ${
+                      checked
+                        ? 'border-primary bg-primary'
+                        : 'border-outline-variant bg-surface-container group-hover:border-primary'
+                    } transition-colors cursor-pointer`}
+                  >
+                    {checked && <div className="w-2.5 h-2.5 bg-surface-dim rounded-[2px]" />}
+                  </div>
+                  <span className={`transition-colors ${checked ? 'text-primary' : 'text-on-surface-variant group-hover:text-primary'}`}>
+                    {category} ({countByCategoryHelper(category)})
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Price filter section */}
+        <div className="glass-panel rounded-xl p-4 flex flex-col gap-3">
+          <h3 className="font-mono text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold">
+            FAIXA DE PREÇO
+          </h3>
+          <div className="flex gap-2 items-center">
+            <div className="flex-1 bg-surface-container border border-outline-variant rounded p-2 focus-within:border-primary transition-colors flex items-center gap-1">
+              <span className="font-mono text-xs text-on-surface-variant">R$</span>
+              <input
+                type="number"
+                title="Preço mínimo"
+                className="bg-transparent border-none outline-none text-xs text-on-surface w-full p-0 focus:ring-0"
+                value={filters.priceMin}
+                onChange={(e) => setFilters(prev => ({ ...prev, priceMin: Math.max(0, parseInt(e.target.value) || 0) }))}
+                id="price-min-input"
+              />
+            </div>
+            <span className="text-on-surface-variant text-xs">-</span>
+            <div className="flex-1 bg-surface-container border border-outline-variant rounded p-2 focus-within:border-primary transition-colors flex items-center gap-1">
+              <span className="font-mono text-xs text-on-surface-variant">R$</span>
+              <input
+                type="number"
+                title="Preço máximo"
+                className="bg-transparent border-none outline-none text-xs text-on-surface w-full p-0 focus:ring-0"
+                value={filters.priceMax}
+                onChange={(e) => setFilters(prev => ({ ...prev, priceMax: Math.max(0, parseInt(e.target.value) || 0) }))}
+                id="price-max-input"
+              />
+            </div>
+          </div>
+          {/* Slider input for fast touch controls */}
+          <input
+            type="range"
+            min={0}
+            max={15000}
+            step={500}
+            className="w-full accent-primary mt-2"
+            value={filters.priceMax}
+            onChange={(e) => setFilters(prev => ({ ...prev, priceMax: parseInt(e.target.value) }))}
+            aria-label="Controle de preço máximo"
+            id="price-range-slider"
+          />
+        </div>
+
+        {/* Rating filter section */}
+        <div className="glass-panel rounded-xl p-4 flex flex-col gap-3">
+          <h3 className="font-mono text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold">
+            AVALIAÇÃO MÍNIMA
+          </h3>
+          <div className="flex flex-col gap-3">
+            {[4, 5].map((stars) => {
+              const active = filters.minRating === stars;
+              return (
+                <label
+                  key={stars}
+                  className="flex items-center gap-3 cursor-pointer group text-sm select-none"
+                  onClick={() => setFilters(prev => ({ ...prev, minRating: active ? 0 : stars }))}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                      active
+                        ? 'border-primary'
+                        : 'border-outline-variant group-hover:border-primary'
+                    } transition-all`}
+                  >
+                    {active && <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
+                  </div>
+                  <div className="flex items-center text-tertiary">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        size={15}
+                        fill={i < stars ? '#4edea3' : 'transparent'}
+                        className="mr-0.5"
+                      />
+                    ))}
+                    <span className="ml-2 text-xs text-on-surface-variant group-hover:text-primary transition-colors">
+                      {stars} & Acima
+                    </span>
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      </aside>
+
+      {/* Product Grid Area */}
+      <section className="flex-grow flex flex-col gap-6">
+        
+        {/* Grid Header / Active Filters & Sorting */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-surface-container-lowest/50 rounded-xl p-4 border border-white/5 backdrop-blur-sm">
+          {/* Active Chips */}
+          <div className="flex gap-2 flex-wrap">
+            {filters.categories.map((cat) => (
+              <div
+                key={cat}
+                className="bg-primary/10 border border-primary/20 text-primary px-3 py-1 rounded-full flex items-center gap-2 font-mono text-[10px] sm:text-xs font-semibold"
+                id={`chip-${cat}`}
+              >
+                {cat}
+                <X
+                  size={12}
+                  className="cursor-pointer hover:text-white transition-colors"
+                  onClick={() => handleRemoveCategoryChip(cat)}
+                />
+              </div>
+            ))}
+            {filters.minRating > 0 && (
+              <div className="bg-tertiary/10 border border-tertiary/20 text-tertiary px-3 py-1 rounded-full flex items-center gap-2 font-mono text-[11px] font-semibold">
+                ★ {filters.minRating}+ Estrelas
+                <X
+                  size={12}
+                  className="cursor-pointer hover:text-white transition-colors"
+                  onClick={() => setFilters(prev => ({ ...prev, minRating: 0 }))}
+                />
+              </div>
+            )}
+            {filters.priceMax < 15000 && (
+              <div className="bg-primary/10 border border-primary/20 text-primary px-3 py-1 rounded-full flex items-center gap-2 font-mono text-[11px] font-semibold">
+                Até R$ {filters.priceMax}
+                <X
+                  size={12}
+                  className="cursor-pointer hover:text-white transition-colors"
+                  onClick={() => setFilters(prev => ({ ...prev, priceMax: 15000 }))}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Sorting Dropdown */}
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="font-mono text-xs text-on-surface-variant font-medium">Ordenar por:</span>
+            <select
+              value={filters.sortBy}
+              onChange={(e) => setFilters(prev => ({ ...prev, sortBy: e.target.value as any }))}
+              className="bg-surface border border-outline-variant text-on-surface rounded-lg px-3 py-1.5 font-mono text-xs tracking-wide focus:border-primary focus:ring-1 focus:ring-primary outline-none cursor-pointer appearance-none pr-8 relative bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22none%22%20stroke%3D%22%23958ea0%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_8px_center] bg-no-repeat"
+              id="catalog-sort-select"
+            >
+              <option value="relevance">Relevância</option>
+              <option value="lowestPrice">Menor Preço</option>
+              <option value="highestPrice">Maior Preço</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Empty State visual */}
+        {processedProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-center p-16 bg-surface-container-lowest/30 rounded-2xl border border-white/5 gap-4">
+            <SlidersHorizontal size={40} className="text-on-surface-variant opacity-60" />
+            <h3 className="font-hanken text-lg font-bold text-on-surface">Nenhum produto encontrado</h3>
+            <p className="font-sans text-sm text-on-surface-variant max-w-sm">
+              Tente redefinir seus filtros ou digite um termo de pesquisa diferente.
+            </p>
+            <button
+              onClick={handleClearFilters}
+              className="mt-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 px-4 py-2 rounded-lg font-mono text-xs cursor-pointer"
+            >
+              Redefinir Filtros
+            </button>
+          </div>
+        ) : (
+          /* Products Grid matching Bento design styling */
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {processedProducts.map((product) => (
+              <div
+                key={product.id}
+                onClick={() => handleSelectProduct(product.id)}
+                className="bg-surface rounded-xl border border-white/5 overflow-hidden group flex flex-col hover:-translate-y-1 transition-all duration-300 luxury-shadow relative cursor-pointer"
+                id={`product-card-${product.id}`}
+              >
+                {/* Photo Header */}
+                <div className="h-64 bg-surface-container relative overflow-hidden">
+                  <img
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+                    src={product.imageUrl}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80"></div>
+                  
+                  {product.bannerText && (
+                    <div className="absolute top-3 left-3 bg-tertiary-container/85 text-tertiary px-2 py-1 rounded text-[10px] font-mono font-bold tracking-wide backdrop-blur-md uppercase border border-tertiary/20">
+                      {product.bannerText}
+                    </div>
+                  )}
+                </div>
+
+                {/* Card description details */}
+                <div className="p-4 flex flex-col flex-grow gap-2.5 bg-gradient-to-b from-surface to-surface-container-lowest">
+                  <h3 className="font-hanken text-base font-semibold text-on-surface leading-tight line-clamp-2 h-10 group-hover:text-primary transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="font-sans text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
+                    {product.description}
+                  </p>
+
+                  {/* Rating / Pricing detail */}
+                  <div className="mt-auto pt-4 flex items-end justify-between border-t border-white/5">
+                    <div className="flex flex-col gap-0.5">
+                      {product.originalPrice && (
+                        <span className="font-mono text-[10px] sm:text-xs text-on-surface-variant line-through opacity-50">
+                          R$ {product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                      )}
+                      <span className="font-mono text-sm sm:text-base text-primary font-bold">
+                        R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center text-tertiary bg-tertiary/10 border border-tertiary/20 px-2.5 py-1 rounded-md">
+                      <Star size={13} fill="#4edea3" className="mr-1" />
+                      <span className="font-mono text-xs font-bold leading-none">{product.rating.toFixed(1)}</span>
+                    </div>
+                  </div>
+
+                  {/* Add direct Action Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product);
+                    }}
+                    className="w-full mt-4 bg-primary text-on-primary py-3 rounded-lg font-mono text-xs font-semibold hover:bg-primary-container transition-all flex items-center justify-center gap-2 hover:shadow-[0_0_15px_rgba(208,188,255,0.4)] cursor-pointer"
+                  >
+                    <ShoppingCart size={15} />
+                    Adicionar ao Carrinho
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Custom pagination layout matching picture */}
+        <div className="mt-8 flex justify-center items-center gap-2">
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer disabled:opacity-40">
+            <ChevronLeft size={18} />
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-mono text-xs font-bold shadow-lg shadow-primary/20">
+            1
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer">
+            2
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer font-bold">
+            3
+          </button>
+          <span className="text-on-surface-variant mx-1 font-mono text-xs">...</span>
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer">
+            8
+          </button>
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all cursor-pointer">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </section>
+    </div>
+  );
+}
