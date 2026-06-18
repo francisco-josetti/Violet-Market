@@ -19,35 +19,35 @@ export default function Footer() {
             className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
             id="footer-terms"
           >
-            Terms of Service
+            Termos de Uso
           </a>
           <a
             href="#"
             className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
             id="footer-privacy"
           >
-            Privacy Policy
+            Política de Privacidade
           </a>
           <a
             href="#"
             className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
             id="footer-cookies"
           >
-            Cookie Settings
+            Configurações de Cookies
           </a>
           <a
             href="#"
             className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
             id="footer-support"
           >
-            Contact Support
+            Suporte
           </a>
           <a
             href="#"
             className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors opacity-80 hover:opacity-100"
             id="footer-merchant"
           >
-            Merchant Portal
+            Portal do Vendedor
           </a>
         </nav>
       </div>

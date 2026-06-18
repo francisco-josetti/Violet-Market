@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Video, BatteryCharging, Gauge, Eye, Heart, ShieldCheck, Star, Play, ChevronRight, ShoppingBag } from 'lucide-react';
 import { ProductPrereq } from '../types';
 import { PRODUCTS } from '../data';
+import { getProducts } from '../lib/products';
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
 
@@ -16,6 +17,11 @@ interface DetailViewProps {
 export default function DetailView({ product }: DetailViewProps) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const [allProducts, setAllProducts] = useState<ProductPrereq[]>(PRODUCTS);
+
+  useEffect(() => {
+    getProducts().then(setAllProducts);
+  }, []);
 
   const handleBuyNow = () => {
     addToCart(product);
@@ -34,8 +40,7 @@ export default function DetailView({ product }: DetailViewProps) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isWished, setIsWished] = useState(false);
 
-  // Generate real related accessories based on Category, excluding self
-  const relatedProducts = PRODUCTS.filter(p => p.id !== product.id).slice(0, 4);
+  const relatedProducts = allProducts.filter(p => p.id !== product.id).slice(0, 4);
 
   const handleThumbnailClick = (url: string) => {
     setActiveImage(url);

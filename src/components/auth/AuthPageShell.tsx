@@ -25,7 +25,7 @@ export default function AuthPageShell({ children }: AuthPageShellProps) {
           </Link>
         </div>
 
-        <div className="flex-grow flex items-center justify-center px-6 py-8 md:py-12">
+        <div className="flex-grow flex items-start justify-center px-6 pt-8 pb-12 md:pt-12 md:pb-16">
           <div className="w-full max-w-md animate-fade-in">{children}</div>
         </div>
       </div>

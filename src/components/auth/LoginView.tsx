@@ -13,7 +13,8 @@ import { routes } from '../../lib/routes';
 import { LOGIN_FORM_DRAFT_KEY } from '../../lib/formStorage';
 import { usePersistedForm } from '../../hooks/usePersistedForm';
 import { getZodFieldErrors, loginSchema } from '../../schemas/auth';
-import { supabase, getSupabaseErrorMessage } from '../../lib/auth';
+import { createClient } from '../../lib/supabase/client';
+import { getSupabaseErrorMessage } from '../../lib/auth';
 
 const loginInitialValues = {
   email: '',
@@ -45,18 +46,25 @@ export default function LoginView() {
     });
   };
 
-  const handleSocialAuth = (provider: 'google' | 'apple') => {
+  const handleSocialAuth = async (provider: 'google') => {
     setFieldErrors({});
     setApiError('');
     setSuccess('');
     setField('showEmailForm', false);
     setLoading(true);
-    setTimeout(() => {
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
       setLoading(false);
-      setSuccess(
-        `Conexão com ${provider === 'google' ? 'Google' : 'Apple'} iniciada. Integração OAuth em breve.`,
-      );
-    }, 600);
+      setApiError(getSupabaseErrorMessage(error, `Erro ao conectar com Google.`));
+    }
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -77,6 +85,7 @@ export default function LoginView() {
 
     setLoading(true);
 
+    const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({
       email: result.data.email,
       password: result.data.password,
@@ -195,6 +204,7 @@ export default function LoginView() {
                 </label>
                 <button
                   type="button"
+                  onClick={() => router.push(routes.resetPassword)}
                   className="font-sans text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
                 >
                   Esqueceu a senha?

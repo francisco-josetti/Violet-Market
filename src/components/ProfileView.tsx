@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -17,15 +17,13 @@ import {
   Sparkles,
   MapPin,
   CreditCard,
+  Edit3,
 } from 'lucide-react';
 import { routes } from '../lib/routes';
-import {
-  AuthSession,
-  clearAuthSession,
-  getAuthSession,
-} from '../lib/auth';
-import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
+import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import ProfileEditView from './ProfileEditView';
+import AddressView from './AddressView';
 
 function getInitials(email: string): string {
   const local = email.split('@')[0] ?? '';
@@ -105,32 +103,32 @@ function ProfileMenuItem({
 
 export default function ProfileView() {
   const router = useRouter();
-  const isLoggedIn = useIsLoggedIn();
+  const { isLoggedIn, user, signOut } = useAuth();
   const { cart } = useCart();
-  const [session, setSession] = useState<AuthSession | null>(null);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showAddresses, setShowAddresses] = useState(false);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      getAuthSession().then(setSession);
-    } else {
-      setSession(null);
-    }
-  }, [isLoggedIn]);
-
   const displayName = useMemo(() => {
-    if (!session?.email) return 'Membro Violet';
-    const local = session.email.split('@')[0] ?? 'membro';
+    if (user?.name) return user.name;
+    if (!user?.email) return 'Membro Violet';
+    const local = user.email.split('@')[0] ?? 'membro';
     return local
       .split(/[._-]/)
       .filter(Boolean)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');
-  }, [session?.email]);
+  }, [user?.name, user?.email]);
 
   const handleLogout = async () => {
-    await clearAuthSession();
+    try {
+      await signOut();
+      await fetch('/auth/signout', { method: 'POST' });
+    } catch (error) {
+      console.error('Falha ao sair da conta:', error);
+      return;
+    }
     router.push(routes.home);
     router.refresh();
   };
@@ -151,7 +149,7 @@ export default function ProfileView() {
     );
   }
 
-  if (isLoggedIn === false || !session) {
+  if (isLoggedIn === false || !user) {
     return (
       <div className="w-full max-w-xl mx-auto px-6 md:px-16 py-16 text-center animate-fade-in flex flex-col items-center gap-6">
         <div className="w-20 h-20 bg-primary/10 border border-primary/25 rounded-full flex items-center justify-center text-primary">
@@ -204,8 +202,12 @@ export default function ProfileView() {
 
       <section className="glass-panel luxury-shadow rounded-2xl p-6 md:p-8 border border-primary/10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
         <div className="relative shrink-0">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-violet to-primary-container flex items-center justify-center font-hanken text-2xl font-extrabold text-white shadow-lg shadow-brand-violet/20">
-            {getInitials(session.email)}
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-violet to-primary-container flex items-center justify-center font-hanken text-2xl font-extrabold text-white shadow-lg shadow-brand-violet/20 overflow-hidden">
+            {user.avatarUrl ? (
+              <img src={user.avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+            ) : (
+              getInitials(user.email)
+            )}
           </div>
           <span className="absolute -bottom-2 -right-2 bg-tertiary text-on-tertiary text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-tertiary-container uppercase tracking-wider flex items-center gap-1">
             <Sparkles size={10} />
@@ -220,7 +222,7 @@ export default function ProfileView() {
             </h2>
             <p className="font-sans text-sm text-on-surface-variant flex items-center justify-center sm:justify-start gap-2 mt-1">
               <Mail size={14} className="text-primary shrink-0" />
-              {session.email}
+              {user.email}
             </p>
           </div>
           <div className="flex flex-wrap justify-center sm:justify-start gap-2">
@@ -233,8 +235,16 @@ export default function ProfileView() {
             </span>
           </div>
           <p className="font-sans text-xs text-on-surface-variant">
-            Membro desde {formatMemberSince(session.loggedAt)}
+            Membro desde {formatMemberSince(user.loggedAt)}
           </p>
+          <button
+            type="button"
+            onClick={() => setShowEdit(true)}
+            className="inline-flex items-center gap-2 mt-2 font-sans text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
+          >
+            <Edit3 size={14} />
+            Editar perfil
+          </button>
         </div>
       </section>
 
@@ -306,7 +316,7 @@ export default function ProfileView() {
           icon={<MapPin size={18} />}
           label="Endereços"
           description="Gerenciar entregas e frete expresso"
-          onClick={() => {}}
+          onClick={() => setShowAddresses(true)}
         />
         <ProfileMenuItem
           icon={<CreditCard size={18} />}
@@ -331,6 +341,15 @@ export default function ProfileView() {
         <LogOut size={16} />
         Sair da conta
       </button>
+
+      {showEdit && (
+        <ProfileEditView
+          onClose={() => setShowEdit(false)}
+          onSaved={() => window.location.reload()}
+        />
+      )}
+
+      {showAddresses && <AddressView onClose={() => setShowAddresses(false)} />}
     </div>
   );
 }

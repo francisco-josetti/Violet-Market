@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import AppShell from '@/src/components/AppShell';
+import { createClient } from '../src/lib/supabase/server';
+import { AuthProvider } from '../src/contexts/AuthContext';
+import type { AuthUser } from '../src/contexts/AuthContext';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -7,15 +10,38 @@ export const metadata: Metadata = {
   description: 'Equipamentos premium e artefatos digitais exclusivos',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let initialUser: AuthUser | null = null;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('name, avatar_url')
+      .eq('id', user.id)
+      .single();
+
+    initialUser = {
+      id: user.id,
+      email: user.email ?? '',
+      name: profile?.name ?? null,
+      avatarUrl: profile?.avatar_url ?? null,
+      provider: user.app_metadata?.provider ?? 'email',
+      loggedAt: user.created_at ?? new Date().toISOString(),
+    };
+  }
+
   return (
     <html lang="pt-BR">
       <body>
-        <AppShell>{children}</AppShell>
+        <AuthProvider initialUser={initialUser}>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );

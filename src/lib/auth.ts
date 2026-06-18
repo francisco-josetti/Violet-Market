@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { createClient } from './supabase/client';
 
 export interface AuthSession {
   isLoggedIn: boolean;
@@ -8,6 +8,7 @@ export interface AuthSession {
 }
 
 export async function getAuthSession(): Promise<AuthSession | null> {
+  const supabase = createClient();
   const { data } = await supabase.auth.getSession();
   const session = data.session;
   if (!session?.user) return null;
@@ -18,10 +19,6 @@ export async function getAuthSession(): Promise<AuthSession | null> {
     email: session.user.email ?? '',
     loggedAt: session.user.created_at ?? new Date().toISOString(),
   };
-}
-
-export async function clearAuthSession(): Promise<void> {
-  await supabase.auth.signOut();
 }
 
 export function getSupabaseErrorMessage(
@@ -50,5 +47,3 @@ export function getSupabaseErrorMessage(
 
   return error.message;
 }
-
-export { supabase } from './supabase';

@@ -2,11 +2,14 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ShoppingCart, Star, X, ChevronLeft, ChevronRight, SlidersHorizontal, Search } from 'lucide-react';
-import { FilterState } from '../types';
+import { ShoppingCart, Star, X, ChevronLeft, ChevronRight, SlidersHorizontal, Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { FilterState, ProductPrereq } from '../types';
 import { PRODUCTS } from '../data';
+import { getProductsPaginated } from '../lib/products';
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
+
+const ITEMS_PER_PAGE = 8;
 
 export default function CatalogView() {
   const router = useRouter();
@@ -14,6 +17,10 @@ export default function CatalogView() {
   const { addToCart } = useCart();
   const categoriaParam = searchParams.get('categoria');
 
+  const [productList, setProductList] = useState<ProductPrereq[]>(PRODUCTS);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(PRODUCTS.length);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     categories: categoriaParam ? [categoriaParam] : ['Hardware'],
     priceMin: 0,
@@ -22,6 +29,13 @@ export default function CatalogView() {
     sortBy: 'relevance',
     searchQuery: ''
   });
+
+  useEffect(() => {
+    getProductsPaginated(currentPage, ITEMS_PER_PAGE).then(({ products, total }) => {
+      setProductList(products);
+      setTotalProducts(total);
+    });
+  }, [currentPage]);
 
   useEffect(() => {
     if (categoriaParam) {
@@ -74,12 +88,12 @@ export default function CatalogView() {
 
   // Get display items with count helper
   const countByCategoryHelper = (category: string) => {
-    return PRODUCTS.filter(p => p.category === category).length;
+    return productList.filter(p => p.category === category).length;
   };
 
   // Process and Filter Products
   const processedProducts = useMemo(() => {
-    let result = [...PRODUCTS];
+    let result = [...productList];
 
     // Search Query
     if (filters.searchQuery.trim() !== '') {
@@ -121,15 +135,38 @@ export default function CatalogView() {
           <h2 className="font-hanken text-lg font-bold text-on-surface flex items-center gap-2">
             <SlidersHorizontal size={18} className="text-primary" /> Filtros
           </h2>
-          <button
-            onClick={handleClearFilters}
-            className="font-mono text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
-            id="clear-all-filters"
-          >
-            Limpar Tudo
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowMobileFilters((prev) => !prev)}
+              className="lg:hidden font-mono text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer flex items-center gap-1"
+              aria-expanded={showMobileFilters}
+              aria-controls="mobile-filters-panel"
+              id="toggle-mobile-filters"
+            >
+              {showMobileFilters ? (
+                <>
+                  Ocultar <ChevronUp size={14} />
+                </>
+              ) : (
+                <>
+                  Mostrar <ChevronDown size={14} />
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleClearFilters}
+              className="font-mono text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
+              id="clear-all-filters"
+            >
+              Limpar Tudo
+            </button>
+          </div>
         </div>
 
+        <div
+          id="mobile-filters-panel"
+          className={`flex-col gap-6 ${showMobileFilters ? 'flex' : 'hidden lg:flex'}`}
+        >
         {/* Search tool */}
         <div className="bg-surface-container border border-outline-variant rounded-xl p-3 flex items-center gap-2 focus-within:border-primary transition-colors">
           <Search size={16} className="text-on-surface-variant" />
@@ -265,6 +302,7 @@ export default function CatalogView() {
               );
             })}
           </div>
+        </div>
         </div>
       </aside>
 
@@ -413,28 +451,65 @@ export default function CatalogView() {
           </div>
         )}
 
-        {/* Custom pagination layout matching picture */}
-        <div className="mt-8 flex justify-center items-center gap-2">
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer disabled:opacity-40">
-            <ChevronLeft size={18} />
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-mono text-xs font-bold shadow-lg shadow-primary/20">
-            1
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer">
-            2
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer font-bold">
-            3
-          </button>
-          <span className="text-on-surface-variant mx-1 font-mono text-xs">...</span>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all font-mono text-xs cursor-pointer">
-            8
-          </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all cursor-pointer">
-            <ChevronRight size={18} />
-          </button>
-        </div>
+        {/* Custom pagination layout */}
+        {totalProducts > ITEMS_PER_PAGE && (
+          <div className="mt-8 flex justify-center items-center gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors cursor-pointer disabled:opacity-40"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            {(() => {
+              const totalPages = Math.ceil(totalProducts / ITEMS_PER_PAGE);
+              const pages: (number | string)[] = [];
+              const maxVisible = 5;
+
+              if (totalPages <= maxVisible + 2) {
+                for (let i = 1; i <= totalPages; i++) pages.push(i);
+              } else {
+                pages.push(1);
+                if (currentPage > 3) pages.push('...');
+                const start = Math.max(2, currentPage - 1);
+                const end = Math.min(totalPages - 1, currentPage + 1);
+                for (let i = start; i <= end; i++) pages.push(i);
+                if (currentPage < totalPages - 2) pages.push('...');
+                pages.push(totalPages);
+              }
+
+              return pages.map((page, idx) => {
+                if (typeof page === 'string') {
+                  return (
+                    <span key={`ellipsis-${idx}`} className="text-on-surface-variant mx-1 font-mono text-xs">
+                      ...
+                    </span>
+                  );
+                }
+                return (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-mono text-xs cursor-pointer transition-all ${
+                      page === currentPage
+                        ? 'bg-primary text-on-primary font-bold shadow-lg shadow-primary/20'
+                        : 'border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              });
+            })()}
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(Math.ceil(totalProducts / ITEMS_PER_PAGE), p + 1))}
+              disabled={currentPage >= Math.ceil(totalProducts / ITEMS_PER_PAGE)}
+              className="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all cursor-pointer disabled:opacity-40"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );

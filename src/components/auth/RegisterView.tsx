@@ -13,7 +13,8 @@ import { routes } from '../../lib/routes';
 import { REGISTER_FORM_DRAFT_KEY } from '../../lib/formStorage';
 import { usePersistedForm } from '../../hooks/usePersistedForm';
 import { getZodFieldErrors, registerSchema } from '../../schemas/auth';
-import { supabase, getSupabaseErrorMessage } from '../../lib/auth';
+import { createClient } from '../../lib/supabase/client';
+import { getSupabaseErrorMessage } from '../../lib/auth';
 
 const registerInitialValues = {
   name: '',
@@ -48,18 +49,25 @@ export default function RegisterView() {
     });
   };
 
-  const handleSocialAuth = (provider: 'google' | 'apple') => {
+  const handleSocialAuth = async (provider: 'google') => {
     setFieldErrors({});
     setApiError('');
     setSuccess('');
     setField('showEmailForm', false);
     setLoading(true);
-    setTimeout(() => {
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
       setLoading(false);
-      setSuccess(
-        `Cadastro com ${provider === 'google' ? 'Google' : 'Apple'} iniciado. Integração OAuth em breve.`,
-      );
-    }, 600);
+      setApiError(getSupabaseErrorMessage(error, `Erro ao conectar com Google.`));
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -83,6 +91,7 @@ export default function RegisterView() {
   
     setLoading(true);
   
+    const supabase = createClient();
     const { error: signUpError } = await supabase.auth.signUp({
       email: result.data.email,
       password: result.data.password,

@@ -38,11 +38,11 @@ Não há testes, pre-commit hooks, ou CI configurados.
 ## Arquitetura
 
 - **Single-package Next.js app.** Todo código de componente/lógica fica em `src/`.
-- **Rotas**: `app/` (cadastro, cart, catalog, login, perfil, produto/[id], sell, sell/success)
+- **Rotas**: `app/` (cadastro, cart, catalog, login, perfil, produto/[id], sell, sell/success, reset-password, auth/callback, auth/confirm)
 - **Pages são wrapper finos** — lógica real em componentes em `src/components/`.
-- **Auth**: Supabase Auth (`supabase.auth`). Sessão via `onAuthStateChange`. CRUD de perfis em `public.profiles`.
-- **Cart**: React Context (`src/contexts/CartContext.tsx`), não Zustand.
-- **Dados mock**: `src/data.ts` exporta `PRODUCTS` (array de `ProductPrereq`) e `COUPONS`.
+- **Auth**: Supabase Auth (`supabase.auth`). Sessão via `onAuthStateChange`. CRUD de perfis em `public.profiles`. OAuth com Google e Apple reais via `signInWithOAuth`. Fluxo de reset de senha via `resetPasswordForEmail`. Callback em `app/auth/callback/route.ts` e `app/auth/confirm/route.ts`.
+- **Cart**: React Context (`src/contexts/CartContext.tsx`). Carrinho persistido no banco (`cart_items`) para usuários autenticados; in-memory para visitantes.
+- **Dados mock**: `src/data.ts` exporta `PRODUCTS` (array de `ProductPrereq`) e `COUPONS` — ambos com fallback quando DB não responde.
 
 ---
 
@@ -62,7 +62,7 @@ app/sell/               ← page.tsx, success/page.tsx
 - Cada etapa (StepProps) recebe `defaultValues` + `onStepComplete` + `onBack`.
 - Step1Info exporta `CATEGORIES` usado por Step4Review.
 - Step4Review chama `publishProduct()` e `clearDraft()` + redireciona em sucesso.
-- `uploadPhoto()` em `api.ts` retorna Data URL (mock local, não upload real).
+- `uploadPhoto()` em `api.ts` faz upload ao Supabase Storage.
 - `publishProduct()` faz POST `/api/products` com preço em centavos; fallback mock se API não responder.
 
 ### Validação
@@ -82,6 +82,75 @@ app/sell/               ← page.tsx, success/page.tsx
 MAX_PHOTOS = 8, MAX_FILE_SIZE_MB = 10
 ACCEPTED_MIME_TYPES = ["image/jpeg", "image/png", "image/webp"]
 ```
+
+---
+
+## Perfil (`/perfil`)
+
+- `ProfileView.tsx` exibe dados do usuário (`AuthUser`), estatísticas e atalhos.
+- Botão "Editar perfil" abre modal `ProfileEditView.tsx` com formulário de nome e upload de avatar.
+- Upload de avatar usa bucket `avatars` no Supabase Storage.
+- Atualização do perfil via `supabase.from('profiles').update(...)`.
+
+---
+
+## Migrations (Supabase)
+
+### Estrutura
+
+```
+supabase/migrations/   ← arquivos SQL versionados
+```
+
+### Workflow
+
+```sh
+# Instalar Supabase CLI (caso não tenha)
+npm install supabase --save-dev
+
+# Inicializar e linkar o projeto
+npx supabase init
+npx supabase link --project-ref ibgsmajftievjrhvctxz
+
+# Puxar schema atual (sobrescreve migrations/)
+npx supabase db pull
+
+# Aplicar migrations locais ao branch remoto
+npx supabase db push
+```
+
+### Tabelas atuais
+
+```
+public.profiles       ← perfil do usuário (id, name, email, avatar_url)
+public.products       ← produtos do marketplace
+public.categories     ← categorias (nome, slug, parent_id)
+public.cart_items     ← itens do carrinho (user_id, product_id, quantity)
+public.coupons        ← cupons de desconto (code, discount_percentage)
+```
+
+### Buckets storage
+
+```
+product-images        ← imagens dos produtos
+avatars               ← avatares dos usuários
+```
+
+---
+
+## Libs internas
+
+| Arquivo | Propósito |
+|---|---|
+| `src/lib/products.ts` | `getProducts()`, `getProductsPaginated(page,size)`, `getProductById(id)` — fallback para mocks |
+| `src/lib/coupons.ts` | `getCoupons()`, `validateCoupon(code)` — fallback para `data.ts` |
+| `src/lib/supabase/admin.ts` | Cliente com `SUPABASE_SERVICE_ROLE_KEY` (server-side only) |
+| `src/lib/supabase/client.ts` | Singleton do browser client (`@supabase/ssr`) |
+| `src/lib/supabase/server.ts` | Server client para Server Components e Route Handlers |
+| `src/lib/supabase/middleware.ts` | `updateSession()` usado pelo middleware root |
+| `src/lib/auth.ts` | `getSupabaseErrorMessage()` — tradução de erros do Supabase |
+| `src/lib/routes.ts` | Objeto `routes` com todas as rotas do app |
+| `src/lib/sell/api.ts` | `uploadPhoto()`, `publishProduct()` |
 
 ---
 

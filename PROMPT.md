@@ -1,153 +1,50 @@
-# Prompt — Aba "Vender Produto" (Marketplace / React + Next.js)
+# Pendências — Violet Market (Supabase)
 
-## Como usar
-Cole este prompt (ou a seção relevante) diretamente no chat sempre que quiser gerar,
-refatorar ou expandir qualquer parte da aba de venda. Substitua os campos entre `< >`
-com os detalhes do seu projeto antes de enviar.
+## Já concluído
 
----
-
-## Prompt principal
-
-```
-Você é um engenheiro front-end sênior especializado em React e Next.js (App Router).
-Estou construindo um marketplace e preciso da funcionalidade completa de "Vender Produto" —
-um wizard de cadastro dividido em etapas, com validação, feedback visual e pronto para
-integrar com uma API REST.
-
-### Contexto do projeto
-- Framework: Next.js 14+ com App Router
-- Estilização: <Tailwind CSS>
-- Gerenciamento de estado: <Zustand | Context API | Redux Toolkit — escolha um>
-- Formulários: React Hook Form + Zod para validação
-- Upload de imagens: <Cloudinary | S3 presigned URL | outro — especifique>
-- Autenticação: o usuário já está logado; o token JWT está disponível via <cookie | localStorage | contexto>
-
-### O que precisa ser gerado
-
-#### 1. Estrutura de arquivos
-Crie os arquivos seguindo a convenção do App Router:
-app/
-  sell/
-    page.tsx          ← rota principal /sell
-    layout.tsx        ← layout da seção de venda (opcional)
-components/
-  sell/
-    SellWizard.tsx    ← orquestra as etapas
-    steps/
-      Step1Info.tsx   ← informações básicas
-      Step2Media.tsx  ← fotos e mídia
-      Step3Details.tsx← detalhes e logística
-      Step4Review.tsx ← revisão e publicação
-    ui/
-      StepIndicator.tsx
-      PhotoUploader.tsx
-      PriceInput.tsx
-
-#### 2. Etapas do wizard
-
-**Etapa 1 — Informações básicas**
-Campos obrigatórios: título (min 10, max 120 chars), categoria (select hierárquico),
-subcategoria, condição (Novo / Usado — como novo / Usado — bom estado / Com defeito),
-preço (número, min R$ 1,00), quantidade em estoque (inteiro positivo).
-Campo opcional: SKU interno.
-
-**Etapa 2 — Fotos & Mídia**
-Mínimo 1 foto, máximo 8. Drag-and-drop + clique para selecionar.
-Preview em grid com reordenação (drag). Indicação de foto principal (primeira).
-Validação: JPG/PNG/WEBP, máx 10 MB por arquivo.
-Mostrar progresso de upload por arquivo.
-
-**Etapa 3 — Detalhes & Logística**
-Descrição longa (rich text simples ou textarea com contagem de chars, mín 20).
-Atributos variantes (opcional): cor, tamanho, modelo — campos dinâmicos add/remove.
-Dimensões e peso para cálculo de frete.
-Opções de frete: Grátis / A combinar / Calcular por CEP (integrar com <ViaCEP | Correios API>).
-
-**Etapa 4 — Revisão & Publicação**
-Resumo completo de todos os campos preenchidos.
-Botão "Editar" em cada seção que volta para a etapa correspondente.
-Botão "Publicar" que faz o POST para a API e redireciona para /sell/success ou exibe erro inline.
-
-#### 3. Validação
-Use Zod para definir o schema de cada etapa. A validação deve ocorrer ao tentar
-avançar para a próxima etapa. Erros devem aparecer inline abaixo de cada campo,
-não em alertas globais.
-
-#### 4. Persistência de rascunho
-Salve o estado do formulário no localStorage a cada mudança de etapa, com chave
-`marketplace_sell_draft`. Ao abrir /sell, verifique se existe rascunho e ofereça
-a opção "Continuar de onde parei" ou "Começar novo anúncio".
-
-#### 5. Acessibilidade
-- Todos os inputs com label associada via htmlFor/id
-- StepIndicator com aria-current="step" na etapa ativa
-- Mensagens de erro com role="alert"
-- Foco automático no primeiro campo ao entrar em cada etapa
-
-#### 6. Integração com API
-Ao publicar, faça um POST para `<SEU_ENDPOINT>/api/products` com o seguinte shape:
-{
-  title: string,
-  categoryId: string,
-  condition: "new" | "like_new" | "good" | "defective",
-  price: number,         // em centavos
-  stock: number,
-  images: string[],      // URLs já uploadadas
-  description: string,
-  variants?: { name: string; values: string[] }[],
-  shipping: { type: "free" | "negotiate" | "calculate"; weightKg?: number }
-}
-Trate os estados: loading (botão desabilitado + spinner), erro da API (mensagem inline),
-sucesso (redirecionar para /sell/success?id=<productId>).
-
-### Restrições e preferências
-- Não use bibliotecas de UI prontas (MUI, Chakra, Shadcn) — componentes próprios apenas
-- Código em TypeScript estrito (strict: true)
-- Sem comentários óbvios no código; comente apenas lógica não trivial
-- Cada componente em arquivo separado; máx ~150 linhas por arquivo
-- Nenhum `any` explícito
-
-### Entregáveis
-Gere os arquivos na ordem: schemas Zod → tipos TypeScript → componentes de UI base →
-componentes de etapa → SellWizard → page.tsx. Para cada arquivo, mostre o caminho
-completo antes do bloco de código.
-```
+- [x] **Segurança DB**: `handle_new_user` com `SET search_path = ''` + `REVOKE EXECUTE` de `anon`/`authenticated`
+- [x] **RLS policies**: `auth.uid()` → `(select auth.uid())` em todas as policies de `products` e `profiles`
+- [x] **RLS duplicadas**: removidas policies redundantes de `profiles` (SELECT e UPDATE)
+- [x] **Storage**: removida policy de listagem pública do bucket `product-images`; corrigida policy de upload com `(select auth.uid())`; adicionada policy de DELETE
+- [x] **Índices FK**: criados em `categories.parent_id` e `products.seller_id`
+- [x] **Colunas**: `category_id` (FK → categories) e `subcategory` adicionadas à tabela `products`
+- [x] **Upload real**: `uploadPhoto()` em `api.ts` agora faz upload ao Supabase Storage em vez de Data URL
+- [x] **API Route**: `app/api/products/route.ts` — POST server-side com validação e autenticação
+- [x] **Camada de produtos**: `src/lib/products.ts` — `getProducts()` e `getProductById()` buscam do Supabase com fallback para mocks
+- [x] **Integração Profiles**: `AuthUser` agora inclui `name` e `avatarUrl`; layout e AuthContext buscam da tabela `profiles`; ProfileView exibe avatar real
+- [x] **Middleware**: removida chamada duplicada de `getUser()`
+- [x] **CatalogView / HomeView / DetailView**: buscam produtos do Supabase via hooks
 
 ---
 
-## Variações úteis
+## Pendente
 
-### Só quero refatorar uma etapa específica
-```
-Refatore o componente Step2Media.tsx do wizard de venda descrito acima.
-Problema atual: <descreva o problema>.
-Mantenha a interface TypeScript existente; não quebre os outros componentes.
-```
+### Alta prioridade
 
-### Quero adicionar uma nova funcionalidade
-```
-No wizard de venda (React/Next.js, React Hook Form + Zod), adicione <funcionalidade>.
-O estado global do wizard está em SellWizard.tsx usando <Zustand | Context>.
-Mostre apenas os arquivos que precisam ser criados ou modificados.
-```
+- [ ] **OAuth real (Google/Apple)** — Botões em `src/components/auth/SocialAuthButtons.tsx` são mock com `setTimeout`. Implementar `supabase.auth.signInWithOAuth({ provider: 'google' })` e `'apple'`. Precisa configurar providers no Dashboard do Supabase (Authentication → Providers).
 
-### Quero revisar o código gerado
-```
-Revise o código abaixo do componente <Nome> do meu marketplace.
-Aponte: bugs, problemas de acessibilidade, performance (re-renders desnecessários),
-e violações de TypeScript strict. Sugira melhorias com exemplos de código.
+- [ ] **"Esqueceu a senha?"** — Botão em `LoginView.tsx` sem `onClick`. Implementar fluxo com `supabase.auth.resetPasswordForEmail(email, { redirectTo: '<URL>/reset-password' })` e criar a página `app/reset-password/page.tsx`.
 
-<cole o código aqui>
-```
+- [ ] **Persistir carrinho no banco** — `CartContext.tsx` é 100% in-memory com 2 itens mock. Criar tabela `cart_items` no Supabase com RLS e persistir o carrinho por usuário autenticado. Manter state local para UX mas sincronizar ao login.
 
----
+### Média prioridade
 
-## Dicas de uso
+- [ ] **Tabela `profiles` — edição de perfil** — O ProfileView exibe dados mas não permite editar. Criar formulário de edição (nome, avatar) com `supabase.from('profiles').update(...)` + upload de avatar ao Storage.
 
-1. **Seja específico sobre o endpoint**: substitua `<SEU_ENDPOINT>` antes de enviar —
-   o agente vai gerar o fetch/axios com a URL correta.
-2. **Uma etapa por vez**: se o contexto ficar grande, peça cada etapa separadamente
-   usando a variação "Só quero refatorar uma etapa específica".
-3. **Itere pelo `AGENTS.md`**: para sessões longas de geração de código, use o
-   arquivo `AGENTS.md` junto com Claude Code para manter consistência entre sessões.
+- [ ] **Configurar `SUPABASE_SERVICE_ROLE_KEY`** — Adicionar no `.env.local` e criar helper `src/lib/supabase/admin.ts` para operações server-side que precisem de privilégios elevados (ex: moderação de produtos).
+
+- [ ] **Versionar migrations** — Inicializar `supabase/` no repo com `supabase init` + `supabase db pull` para manter o schema versionado. Atualizar `AGENTS.md` com esse workflow.
+
+- [ ] **Página `/sell/success` — buscar produto real** — Atualmente usa mock. Ao redirecionar com `?id=<uuid>`, buscar o produto recém-criado do Supabase para exibir resumo real.
+
+### Baixa prioridade
+
+- [ ] **Singleton do browser client** — `createClient()` em `client.ts` cria nova instância a cada chamada. Implementar padrão singleton para evitar múltiplos listeners em `onAuthStateChange` durante HMR.
+
+- [ ] **Cart view — produto do banco** — `CartView` e `CartContext` usam o tipo `ProductPrereq` do mock para exibir nome/preço. Quando produtos vêm do Supabase, o carrinho precisa armazenar o `productId` e buscar dados atualizados.
+
+- [ ] **Imagem de avatar no bucket** — Criar bucket `avatars` com RLS e policy de upload/deleção própria. Atualizar `ProfileView` e edição de perfil para usar esse bucket.
+
+- [ ] **Desconto VIP dinâmico** — O `CartView` hardcoded "5% VIP". Criar tabela `coupons` no Supabase, mover `COUPONS` do `data.ts` para o banco, e buscar cupons vigentes server-side.
+
+- [ ] **Paginação real no catálogo** — `CatalogView` tem paginação visual estática. Implementar paginação server-side com `range()` do Supabase client.

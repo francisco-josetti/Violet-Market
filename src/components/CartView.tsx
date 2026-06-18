@@ -1,82 +1,34 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, X, Plus, Minus, Truck, Lock, ArrowRight, Tag, Sparkles, CheckCircle2, ShoppingCart, LogIn } from 'lucide-react';
-import { COUPONS } from '../data';
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
+import CheckoutOverlay from './CheckoutOverlay';
 
 export default function CartView() {
   const router = useRouter();
   const isLoggedIn = useIsLoggedIn();
-  const { cart, updateQuantity, removeItem, clearCart } = useCart();
-  const [couponInput, setCouponInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<typeof COUPONS[0] | null>(null);
-  const [couponError, setCouponError] = useState('');
-  const [checkoutComplete, setCheckoutComplete] = useState(false);
-  const [trackerId, setTrackerId] = useState('');
+  const { cart, updateQuantity, removeItem } = useCart();
+  const [showCheckout, setShowCheckout] = useState(false);
 
-  // 1. Calculations
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   const subtotal = useMemo(() => {
     return cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   }, [cart]);
 
-  // VIP discount 5% automatically
-  const vipDiscount = useMemo(() => {
-    return subtotal * 0.05;
-  }, [subtotal]);
-
-  // Promo coupon discount (e.g. VIOLET20 gives 20% off after subtotal - vipDiscount)
-  const couponDiscount = useMemo(() => {
-    if (!appliedCoupon) return 0;
-    const baseValue = subtotal - vipDiscount;
-    return baseValue * (appliedCoupon.discountPercentage / 100);
-  }, [appliedCoupon, subtotal, vipDiscount]);
-
-  const total = useMemo(() => {
-    const val = subtotal - vipDiscount - couponDiscount;
-    return val > 0 ? val : 0;
-  }, [subtotal, vipDiscount, couponDiscount]);
-
-  // 2. Coupon submission handler
-  const handleApplyCoupon = () => {
-    const code = couponInput.trim().toUpperCase();
-    if (code === '') return;
-
-    const matched = COUPONS.find(c => c.code === code);
-    if (matched) {
-      setAppliedCoupon(matched);
-      setCouponInput('');
-      setCouponError('');
-    } else {
-      setCouponError('Código inválido ou expirado');
-      setAppliedCoupon(null);
-    }
-  };
-
-  const handleRemoveCoupon = () => {
-    setAppliedCoupon(null);
-  };
-
-  // 3. Checkout handler
-  const handleCheckout = () => {
-    if (cart.length === 0) return;
-    const randomTracker = `VIP-${Math.floor(100000 + Math.random() * 900000)}-XM`;
-    setTrackerId(randomTracker);
-    setCheckoutComplete(true);
-    clearCart();
-  };
+  const vipDiscount = subtotal * 0.05;
+  const total = Math.max(0, subtotal - vipDiscount);
 
   if (isLoggedIn === null) {
     return null;
   }
 
-  if (isLoggedIn === false) {
+if (isLoggedIn === false) {
     return (
       <div className="w-full max-w-xl mx-auto px-6 md:px-16 py-16 text-center animate-fade-in flex flex-col items-center gap-6">
         <div className="w-20 h-20 bg-primary/10 border border-primary/25 rounded-full flex items-center justify-center text-primary">
@@ -109,47 +61,10 @@ export default function CartView() {
     );
   }
 
-  if (checkoutComplete) {
-    return (
-      <div className="w-full max-w-xl mx-auto px-6 py-16 text-center animate-fade-in flex flex-col items-center gap-6">
-        <div className="w-20 h-20 bg-tertiary/10 border border-tertiary/25 rounded-full flex items-center justify-center text-tertiary animate-bounce">
-          <CheckCircle2 size={40} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="font-hanken text-3xl font-extrabold text-on-surface">Pedido de Elite Confirmado!</h2>
-          <p className="font-sans text-sm text-on-surface-variant max-w-md">
-            Parabéns! Sua requisição foi registrada com sucesso sob altíssima criptografia de segurança.
-          </p>
-        </div>
-
-        <div className="bg-surface-container rounded-xl p-5 border border-white/5 w-full flex flex-col gap-3">
-          <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant">
-            <span>ID DO RASTREADOR:</span>
-            <span className="text-primary font-bold">{trackerId}</span>
-          </div>
-          <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant">
-            <span>MÉTODO DE ENTREGA:</span>
-            <span className="text-tertiary font-bold">Frete Expresso Grátis ⚡</span>
-          </div>
-          <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant border-t border-white/5 pt-3">
-            <span>STATUS ATUAL:</span>
-            <span className="text-primary font-bold uppercase tracking-wider animate-pulse">Sendo Preparado</span>
-          </div>
-        </div>
-
-        <Link
-          href={routes.catalog}
-          onClick={() => setCheckoutComplete(false)}
-          className="mt-4 bg-primary text-on-primary font-mono text-xs font-bold px-8 py-4 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all w-full text-center"
-        >
-          Retornar ao Catálogo
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-16 py-8 flex flex-col lg:flex-row gap-8 animate-fade-in">
+    <>
+      {showCheckout && <CheckoutOverlay onClose={() => setShowCheckout(false)} />}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-16 py-8 flex flex-col lg:flex-row gap-8 animate-fade-in">
       
       {/* Back button header helper */}
       <div className="w-full lg:hidden flex items-center gap-2 mb-2">
@@ -285,7 +200,6 @@ export default function CartView() {
               Resumo do Pedido
             </h2>
 
-            {/* Values overview */}
             <div className="flex flex-col gap-3 mb-6">
               <div className="flex justify-between items-center text-on-surface-variant font-sans text-xs sm:text-sm">
                 <span>Subtotal</span>
@@ -303,60 +217,8 @@ export default function CartView() {
                 <span>Frete</span>
                 <span className="font-mono font-semibold text-tertiary uppercase text-xs">Grátis</span>
               </div>
-
-              {/* Promo applied chip */}
-              {appliedCoupon && (
-                <div className="flex justify-between items-center text-on-surface-variant font-sans text-xs sm:text-sm bg-primary/10 border border-primary/25 rounded-lg p-2.5">
-                  <div className="flex items-center gap-1.5 text-primary font-semibold">
-                    <Tag size={13} />
-                    <span>{appliedCoupon.code} (-{appliedCoupon.discountPercentage}%)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-sm text-primary font-bold">
-                      -R$ {couponDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                    </span>
-                    <button
-                      onClick={handleRemoveCoupon}
-                      className="text-primary hover:text-white transition-colors cursor-pointer"
-                    >
-                      <X size={14} />
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* Promo Code input field */}
-            <div className="mb-6">
-              <label className="block font-mono text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold mb-2" htmlFor="coupon-input">
-                Cupom de Desconto
-              </label>
-              <div className="flex gap-2">
-                <input
-                  id="coupon-input"
-                  type="text"
-                  placeholder="Insira o código"
-                  className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-on-surface font-sans text-xs focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-on-surface-variant/40"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                />
-                <button
-                  onClick={handleApplyCoupon}
-                  className="bg-surface-container-high hover:bg-surface-bright text-on-surface font-mono text-xs px-4 py-2 rounded-lg border border-outline-variant transition-colors cursor-pointer h-10 flex items-center justify-center shrink-0"
-                  id="coupon-apply-btn"
-                >
-                  Aplicar
-                </button>
-              </div>
-              {couponError && <p className="text-error text-xs mt-1.5 font-mono">{couponError}</p>}
-              {appliedCoupon && (
-                <p className="text-tertiary text-xs mt-1.5 font-mono flex items-center gap-1">
-                  <Sparkles size={11} /> Cupom aplicado com sucesso!
-                </p>
-              )}
-            </div>
-
-            {/* Total price area */}
             <div className="border-t border-white/10 pt-4 mb-6">
               <div className="flex justify-between items-end">
                 <span className="font-hanken text-lg font-bold text-on-surface">Total</span>
@@ -371,9 +233,8 @@ export default function CartView() {
               </div>
             </div>
 
-            {/* Check action */}
             <button
-              onClick={handleCheckout}
+              onClick={() => setShowCheckout(true)}
               className="w-full bg-brand-violet hover:bg-primary-container text-white py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] flex items-center justify-center gap-2 cursor-pointer scale-100 active:scale-[0.98]"
               id="checkout-action-btn"
             >
@@ -381,7 +242,6 @@ export default function CartView() {
               <ArrowRight size={14} />
             </button>
 
-            {/* Visual reassurance details */}
             <p className="text-center font-sans text-[10px] text-on-surface-variant mt-4 flex items-center justify-center gap-1.5 opacity-80 select-none">
               <Lock size={12} className="text-primary" /> Pagamento 100% seguro e criptografado
             </p>
@@ -389,5 +249,6 @@ export default function CartView() {
         </aside>
       )}
     </div>
+    </>
   );
 }

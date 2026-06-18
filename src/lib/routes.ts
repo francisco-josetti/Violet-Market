@@ -4,6 +4,7 @@ export const routes = {
   cart: '/cart',
   login: '/login',
   register: '/cadastro',
+  resetPassword: '/reset-password',
   profile: '/perfil',
   product: (id: string) => `/produto/${id}`,
   sell: '/sell',
@@ -12,7 +13,7 @@ export const routes = {
     `/catalog?categoria=${encodeURIComponent(category)}`,
 } as const;
 
-export const authRoutes = [routes.login, routes.register] as const;
+export const authRoutes = [routes.login, routes.register, routes.resetPassword] as const;
 
 export function isAuthRoute(pathname: string) {
   return authRoutes.includes(pathname as (typeof authRoutes)[number]);

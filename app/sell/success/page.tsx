@@ -1,21 +1,22 @@
 // 1. Imports externos
 'use client';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle2, ShoppingBag, PlusCircle } from 'lucide-react';
-
-// 2. Imports internos
 import { routes } from '@/src/lib/routes';
+import { getProductById } from '@/src/lib/products';
+import type { ProductPrereq } from '@/src/types';
 
-// 3. Tipos/interfaces locais
-
-// 4. Constantes locais
-
-// Subcomponente que consome useSearchParams
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const productId = searchParams.get('id') || 'desconhecido';
+  const productId = searchParams.get('id') || '';
+  const [product, setProduct] = useState<ProductPrereq | null>(null);
+
+  useEffect(() => {
+    if (!productId) return;
+    getProductById(productId).then(setProduct);
+  }, [productId]);
 
   return (
     <div className="glass-panel border border-tertiary/20 rounded-2xl p-8 md:p-12 max-w-lg w-full text-center flex flex-col items-center gap-6 shadow-[0_0_50px_rgba(78,222,163,0.1)]">
@@ -27,14 +28,31 @@ function SuccessContent() {
         <h1 className="font-hanken text-2xl md:text-3xl font-extrabold text-white">
           Anúncio Publicado!
         </h1>
-        <p className="font-sans text-sm text-on-surface-variant/80">
-          Seu produto foi publicado com sucesso e já está disponível para visualização no catálogo.
-        </p>
+        {product ? (
+          <div className="flex flex-col gap-1">
+            <p className="font-hanken text-lg font-semibold text-primary">
+              {product.name}
+            </p>
+            <p className="font-sans text-sm text-on-surface-variant/80">
+              Seu produto foi publicado com sucesso e já está disponível no catálogo.
+            </p>
+            <p className="font-mono text-xs text-on-surface-variant/60 mt-1">
+              R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              {product.bannerText && (
+                <span className="ml-2 text-tertiary">| {product.bannerText}</span>
+              )}
+            </p>
+          </div>
+        ) : (
+          <p className="font-sans text-sm text-on-surface-variant/80">
+            Seu produto foi publicado com sucesso e já está disponível para visualização no catálogo.
+          </p>
+        )}
       </div>
 
       <div className="bg-surface-container-low/60 border border-white/5 rounded-xl px-4 py-3 font-mono text-xs w-full flex justify-between items-center text-left">
         <span className="text-on-surface-variant/60">ID do Anúncio:</span>
-        <span className="text-primary font-bold">{productId}</span>
+        <span className="text-primary font-bold">{productId || '—'}</span>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 w-full mt-4">

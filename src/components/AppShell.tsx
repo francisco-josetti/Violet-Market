@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import { Check } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
+import MobileBottomNav from './MobileBottomNav';
 import { CartProvider, useCart } from '../contexts/CartContext';
+import { OverlayProvider, useOverlay } from '../contexts/OverlayContext';
 import { isAuthRoute } from '../lib/routes';
 
 function GlobalToast() {
@@ -15,7 +17,7 @@ function GlobalToast() {
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 bg-surface-container-high border border-primary/25 rounded-xl p-4 flex items-center gap-3 shadow-2xl animate-bounce-short cursor-pointer max-w-sm"
+      className="fixed bottom-20 md:bottom-6 right-6 z-50 bg-surface-container-high border border-primary/25 rounded-xl p-4 flex items-center gap-3 shadow-2xl animate-bounce-short cursor-pointer max-w-sm"
       onClick={dismissToast}
       id="global-toast-msg"
     >
@@ -34,15 +36,20 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   const authPage = isAuthRoute(pathname);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-sans transition-all selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
       <GlobalToast />
       {!authPage && <Header />}
-      <main className="flex-grow flex flex-col">{children}</main>
-      {!authPage && <Footer />}
+      <main className="flex-grow flex flex-col pb-16 md:pb-0">{children}</main>
+      {!authPage && (
+        <div className="hidden md:block">
+          <Footer />
+        </div>
+      )}
+      {!authPage && <MobileBottomNav />}
     </div>
   );
 }
@@ -50,7 +57,9 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
+      <OverlayProvider>
       <ShellContent>{children}</ShellContent>
+    </OverlayProvider>
     </CartProvider>
   );
 }

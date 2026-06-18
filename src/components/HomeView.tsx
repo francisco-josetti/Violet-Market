@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Plus, Tag, ShoppingBag } from 'lucide-react';
 import { ProductPrereq } from '../types';
 import { PRODUCTS } from '../data';
+import { getProducts } from '../lib/products';
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
@@ -15,6 +16,11 @@ export default function HomeView() {
   const { addToCart } = useCart();
   const [copiedCoupon, setCopiedCoupon] = useState(false);
   const isLoggedIn = useIsLoggedIn();
+  const [productList, setProductList] = useState<ProductPrereq[]>(PRODUCTS);
+
+  useEffect(() => {
+    getProducts().then(setProductList);
+  }, []);
 
   const newArrivalIds = [
     'visor-optico-pro',
@@ -22,7 +28,7 @@ export default function HomeView() {
     'audio-espacial-v2',
     'pad-analitico-core',
   ];
-  const newArrivals = PRODUCTS.filter((p) => newArrivalIds.includes(p.id));
+  const newArrivals = productList.filter((p) => newArrivalIds.includes(p.id));
 
   const handleCopyCoupon = () => {
     navigator.clipboard.writeText('VIOLET20');
