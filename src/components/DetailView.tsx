@@ -59,7 +59,7 @@ export default function DetailView({ product }: DetailViewProps) {
     <div className="w-full max-w-7xl mx-auto px-6 md:px-16 py-8 animate-fade-in flex flex-col gap-12">
       
       {/* Breadcrumbs matching image navigation */}
-      <nav aria-label="Breadcrumb" className="flex text-on-surface-variant font-mono text-xs mb-2">
+      <nav aria-label="Breadcrumb" className="flex text-muted-foreground font-mono text-xs mb-2">
         <ol className="inline-flex items-center space-x-2">
           <li>
             <Link
@@ -87,7 +87,7 @@ export default function DetailView({ product }: DetailViewProps) {
               {product.category}
             </Link>
           </li>
-          <li aria-current="page" className="flex items-center gap-1.5 text-on-surface truncate max-w-[200px] sm:max-w-xs font-semibold">
+          <li aria-current="page" className="flex items-center gap-1.5 text-foreground truncate max-w-[200px] sm:max-w-xs font-semibold">
             <ChevronRight size={12} className="opacity-65" />
             <span>{product.name}</span>
           </li>
@@ -99,7 +99,7 @@ export default function DetailView({ product }: DetailViewProps) {
         
         {/* Gallery Section columns (Left-side 7 cols) */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden glass-panel relative group border border-white/5 flex items-center justify-center">
+          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden bg-card border border-border relative group flex items-center justify-center">
             {isVideoPlaying ? (
               <div className="absolute inset-0 bg-black flex flex-col items-center justify-center gap-3">
                 <span className="animate-ping absolute w-4 h-4 bg-primary rounded-full" />
@@ -108,7 +108,7 @@ export default function DetailView({ product }: DetailViewProps) {
                 </span>
                 <button
                   onClick={() => setIsVideoPlaying(false)}
-                  className="mt-4 bg-primary/10 border border-primary/25 hover:bg-primary/20 text-xs font-mono text-primary px-4 py-2 rounded-lg cursor-pointer"
+                  className="mt-4 bg-primary/10 border border-primary/20 hover:bg-primary/20 text-xs font-mono text-primary px-4 py-2 rounded-lg cursor-pointer"
                 >
                   Voltar à Galeria
                 </button>
@@ -125,7 +125,7 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Static labels tags */}
             {product.bannerText && (
               <div className="absolute top-4 left-4 z-10">
-                <span className="bg-primary/15 text-primary border border-primary/20 font-mono text-[10px] sm:text-xs px-3.5 py-1.5 rounded-full backdrop-blur-md uppercase font-semibold tracking-wider">
+                <span className="bg-primary/10 text-primary border border-primary/20 font-mono text-[10px] sm:text-xs px-3.5 py-1.5 rounded-full uppercase font-semibold tracking-wider">
                   {product.bannerText}
                 </span>
               </div>
@@ -140,8 +140,8 @@ export default function DetailView({ product }: DetailViewProps) {
                 <button
                   key={index}
                   onClick={() => handleThumbnailClick(url)}
-                  className={`aspect-square rounded-xl overflow-hidden glass-panel shrink-0 border relative cursor-pointer ${
-                    active ? 'border-primary' : 'border-outline-variant hover:border-primary/50'
+                  className={`aspect-square rounded-xl overflow-hidden bg-card border shrink-0 relative cursor-pointer ${
+                    active ? 'border-primary' : 'border-border hover:border-primary'
                   } transition-all`}
                   id={`thumb-btn-${index}`}
                 >
@@ -158,14 +158,14 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Simulated Live broadcast video thumbnail */}
             <button
               onClick={handleVideoThumbClick}
-              className={`aspect-square rounded-xl overflow-hidden glass-panel shrink-0 border relative cursor-pointer flex flex-col items-center justify-center gap-1 bg-surface-container-high hover:border-primary ${
-                isVideoPlaying ? 'border-primary bg-primary/5' : 'border-outline-variant'
+              className={`aspect-square rounded-xl overflow-hidden bg-accent border border-border shrink-0 relative cursor-pointer flex flex-col items-center justify-center gap-1 hover:border-primary ${
+                isVideoPlaying ? 'border-primary bg-primary/5' : ''
               } transition-all`}
               aria-label="Assistir Transmissão"
               id="drone-video-thumb-trigger"
             >
-              <Play size={20} className={isVideoPlaying ? 'text-primary animate-pulse' : 'text-on-surface-variant'} />
-              <span className="font-mono text-[9px] text-on-surface-variant uppercase tracking-wider hidden sm:block">
+              <Play size={20} className={isVideoPlaying ? 'text-primary animate-pulse' : 'text-muted-foreground'} />
+              <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-wider hidden sm:block">
                 Vídeo Pro
               </span>
             </button>
@@ -180,23 +180,23 @@ export default function DetailView({ product }: DetailViewProps) {
               <Star size={13} fill="#ffb400" className="mr-0.5" />
               {product.rating.toFixed(1)}
             </span>
-            <span className="text-on-surface-variant text-xs font-medium">({product.reviewsCount} avaliações de prestígio)</span>
+            <span className="text-muted-foreground text-xs font-medium">({product.reviewsCount} avaliações de prestígio)</span>
           </div>
 
-          <h1 className="font-hanken text-2xl sm:text-3xl md:text-3.5xl font-extrabold text-on-surface leading-tight tracking-tight mb-4">
+          <h1 className="font-hanken text-2xl sm:text-3xl md:text-3.5xl font-extrabold text-foreground leading-tight tracking-tight mb-4">
             {product.name}
           </h1>
 
-          <p className="font-sans text-sm md:text-base text-on-surface-variant leading-relaxed mb-6">
+          <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed mb-6">
             {product.description}
           </p>
 
-          <div className="flex items-baseline gap-3 mb-6 pb-6 border-b border-white/10">
-            <span className="font-mono text-3xl sm:text-4xl font-black text-glow-primary text-primary">
+          <div className="flex items-baseline gap-3 mb-6 pb-6 border-b border-border">
+            <span className="font-mono text-3xl sm:text-4xl font-black text-primary">
               R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </span>
             {product.originalPrice && (
-              <span className="font-mono text-sm sm:text-base text-on-surface-variant line-through opacity-50">
+              <span className="font-mono text-sm sm:text-base text-muted-foreground line-through opacity-50">
                 R$ {product.originalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
             )}
@@ -214,10 +214,10 @@ export default function DetailView({ product }: DetailViewProps) {
                 else if (key.toLowerCase().includes('sensor') || key.toLowerCase().includes('conex')) iconComponent = <Eye size={16} className="text-primary mb-1" />;
 
                 return (
-                  <div key={idx} className="glass-panel p-3.5 rounded-xl flex flex-col gap-0.5 border border-white/5 h-20 justify-center">
+                  <div key={idx} className="bg-card border border-border rounded-xl p-3.5 flex flex-col gap-0.5 h-20 justify-center">
                     {iconComponent}
-                    <span className="font-mono text-[9px] sm:text-[10px] text-on-surface-variant uppercase tracking-wider">{key}</span>
-                    <span className="font-sans text-xs sm:text-sm font-semibold text-on-surface">{val}</span>
+                    <span className="font-mono text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-wider">{key}</span>
+                    <span className="font-sans text-xs sm:text-sm font-semibold text-foreground">{val}</span>
                   </div>
                 );
               })}
@@ -229,7 +229,7 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Direct purchase */}
             <button
               onClick={handleBuyNow}
-              className="w-full bg-[#8B5CF6] hover:bg-brand-violet text-white font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] cursor-pointer active:scale-98"
+              className="w-full bg-primary hover:bg-primary/90 text-white font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               id="buy-now-cta"
             >
               <ShoppingBag size={15} />
@@ -248,10 +248,10 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Add to Wishlist toggle */}
             <button
               onClick={handleToggleWishlist}
-              className={`w-full border py-3 rounded-lg text-xs font-mono tracking-wide hover:bg-white/5 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
+              className={`w-full border py-3 rounded-lg text-xs font-mono tracking-wide hover:bg-accent transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
                 isWished
                   ? 'border-tertiary text-tertiary bg-tertiary/5'
-                  : 'border-outline-variant text-on-surface-variant hover:text-white'
+                  : 'border-border text-muted-foreground hover:text-white'
               }`}
             >
               <Heart size={14} fill={isWished ? '#4edea3' : 'transparent'} />
@@ -260,7 +260,7 @@ export default function DetailView({ product }: DetailViewProps) {
           </div>
 
           {/* Trust reassurance detail labels */}
-          <div className="mt-6 flex items-center gap-2 text-on-surface-variant font-mono text-[10px] tracking-wide select-none uppercase justify-center opacity-75">
+          <div className="mt-6 flex items-center gap-2 text-muted-foreground font-mono text-[10px] tracking-wide select-none uppercase justify-center opacity-75">
             <ShieldCheck size={14} className="text-primary mt-0.5" />
             Garantia Violet Market - 12 Meses Inclusa
           </div>
@@ -269,13 +269,13 @@ export default function DetailView({ product }: DetailViewProps) {
 
       {/* Connected Related Accessories matching mockup bottom */}
       <section className="mt-12">
-        <div className="flex items-center justify-between mb-6 pb-2 border-b border-white/5">
-          <h2 className="font-hanken text-lg md:text-xl font-bold text-on-surface tracking-tight">
+        <div className="flex items-center justify-between mb-6 pb-2 border-b border-border">
+          <h2 className="font-hanken text-lg md:text-xl font-bold text-foreground tracking-tight">
             Produtos Relacionados
           </h2>
           <button
             onClick={() => router.push(routes.catalog)}
-            className="text-primary font-mono text-xs sm:text-sm hover:text-brand-violet flex items-center gap-1 group cursor-pointer"
+            className="text-primary font-mono text-xs sm:text-sm hover:text-primary flex items-center gap-1 group cursor-pointer"
           >
             Ver todos
             <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
@@ -291,9 +291,9 @@ export default function DetailView({ product }: DetailViewProps) {
                 setActiveImage(related.imageUrl);
                 setIsVideoPlaying(false);
               }}
-              className="glass-panel rounded-xl overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-all duration-300 border border-white/5"
+              className="bg-card border border-border rounded-xl overflow-hidden flex flex-col group cursor-pointer hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="w-full aspect-[4/3] overflow-hidden relative bg-surface-container border-b border-white/5">
+              <div className="w-full aspect-[4/3] overflow-hidden relative bg-muted border-b border-border">
                 <img
                   alt={related.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-103 opacity-95 group-hover:opacity-100"
@@ -302,10 +302,10 @@ export default function DetailView({ product }: DetailViewProps) {
                 />
               </div>
               <div className="p-4 flex flex-col flex-grow">
-                <h3 className="font-hanken text-xs sm:text-sm font-semibold text-on-surface mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                <h3 className="font-hanken text-xs sm:text-sm font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-1">
                   {related.name}
                 </h3>
-                <span className="font-mono text-xs font-bold text-primary text-glow-primary mt-auto">
+                <span className="font-mono text-xs font-bold text-primary mt-auto">
                   R$ {related.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>

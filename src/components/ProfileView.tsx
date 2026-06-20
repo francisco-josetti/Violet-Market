@@ -62,26 +62,26 @@ function ProfileMenuItem({
   onClick,
 }: ProfileMenuItemProps) {
   const className =
-    'w-full flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-surface-container-low/40 hover:bg-surface-container hover:border-primary/20 transition-all duration-200 text-left group cursor-pointer';
+    'w-full flex items-center gap-4 p-4 rounded-xl border border-border bg-muted hover:bg-accent hover:border-border transition-all duration-200 text-left group cursor-pointer';
 
   const content = (
     <>
-      <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+      <div className="w-10 h-10 rounded-lg bg-primary/10 border border-border flex items-center justify-center text-primary shrink-0">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-hanken text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">
+        <p className="font-hanken text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
           {label}
         </p>
         {description && (
-          <p className="font-sans text-xs text-on-surface-variant mt-0.5 truncate">
+          <p className="font-sans text-xs text-muted-foreground mt-0.5 truncate">
             {description}
           </p>
         )}
       </div>
       <ChevronRight
         size={18}
-        className="text-on-surface-variant group-hover:text-primary shrink-0 transition-colors"
+        className="text-muted-foreground group-hover:text-primary shrink-0 transition-colors"
       />
     </>
   );
@@ -136,13 +136,13 @@ export default function ProfileView() {
   if (isLoggedIn === null) {
     return (
       <div className="w-full max-w-4xl mx-auto px-6 md:px-16 py-12 animate-fade-in">
-        <div className="h-8 w-48 bg-surface-container-high rounded-lg mb-8 animate-pulse" />
-        <div className="glass-panel rounded-2xl p-8 border border-white/5 flex gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-surface-container-high animate-pulse shrink-0" />
+        <div className="h-8 w-48 bg-accent rounded-lg mb-8 animate-pulse" />
+        <div className="bg-card border border-border rounded-2xl p-8 flex gap-6">
+          <div className="w-24 h-24 rounded-2xl bg-accent animate-pulse shrink-0" />
           <div className="flex-1 flex flex-col gap-3">
-            <div className="h-6 w-40 bg-surface-container-high rounded animate-pulse" />
-            <div className="h-4 w-56 bg-surface-container-high rounded animate-pulse" />
-            <div className="h-4 w-32 bg-surface-container-high rounded animate-pulse" />
+            <div className="h-6 w-40 bg-accent rounded animate-pulse" />
+            <div className="h-4 w-56 bg-accent rounded animate-pulse" />
+            <div className="h-4 w-32 bg-accent rounded animate-pulse" />
           </div>
         </div>
       </div>
@@ -152,20 +152,20 @@ export default function ProfileView() {
   if (isLoggedIn === false || !user) {
     return (
       <div className="w-full max-w-xl mx-auto px-6 md:px-16 py-16 text-center animate-fade-in flex flex-col items-center gap-6">
-        <div className="w-20 h-20 bg-primary/10 border border-primary/25 rounded-full flex items-center justify-center text-primary">
+        <div className="w-20 h-20 bg-primary/10 border border-border rounded-full flex items-center justify-center text-primary">
           <User size={36} />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-on-surface">
+          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-foreground">
             Meu Perfil
           </h1>
-          <p className="font-sans text-sm text-on-surface-variant max-w-md">
+          <p className="font-sans text-sm text-muted-foreground max-w-md">
             Entre na sua conta para acessar pedidos, preferências e benefícios VIP.
           </p>
         </div>
         <Link
           href={routes.login}
-          className="bg-brand-violet text-white px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all duration-300 flex items-center justify-center gap-2"
+          className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
           id="profile-login-btn"
         >
           <LogIn size={16} />
@@ -173,7 +173,7 @@ export default function ProfileView() {
         </Link>
         <Link
           href={routes.register}
-          className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors"
+          className="font-sans text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           Criar conta gratuita
         </Link>
@@ -188,21 +188,21 @@ export default function ProfileView() {
           <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">
             Área do membro
           </p>
-          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-on-surface">
+          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-foreground">
             Meu Perfil
           </h1>
         </div>
         <Link
           href={routes.catalog}
-          className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors"
+          className="font-sans text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           Continuar comprando
         </Link>
       </div>
 
-      <section className="glass-panel luxury-shadow rounded-2xl p-6 md:p-8 border border-primary/10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+      <section className="bg-card border border-border shadow-lg rounded-2xl p-6 md:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
         <div className="relative shrink-0">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-violet to-primary-container flex items-center justify-center font-hanken text-2xl font-extrabold text-white shadow-lg shadow-brand-violet/20 overflow-hidden">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center font-hanken text-2xl font-extrabold text-white shadow-lg overflow-hidden">
             {user.avatarUrl ? (
               <img src={user.avatarUrl} alt={displayName} className="w-full h-full object-cover" />
             ) : (
@@ -217,30 +217,30 @@ export default function ProfileView() {
 
         <div className="flex-1 text-center sm:text-left flex flex-col gap-3">
           <div>
-            <h2 className="font-hanken text-xl font-bold text-on-surface">
+            <h2 className="font-hanken text-xl font-bold text-foreground">
               {displayName}
             </h2>
-            <p className="font-sans text-sm text-on-surface-variant flex items-center justify-center sm:justify-start gap-2 mt-1">
+            <p className="font-sans text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-2 mt-1">
               <Mail size={14} className="text-primary shrink-0" />
               {user.email}
             </p>
           </div>
           <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider bg-surface-container-high border border-white/10 text-on-surface-variant px-3 py-1.5 rounded-full">
+            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider bg-accent border border-border text-muted-foreground px-3 py-1.5 rounded-full">
               <Shield size={12} className="text-primary" />
               Conta verificada
             </span>
-            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-full">
+            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider bg-primary/10 border border-border text-primary px-3 py-1.5 rounded-full">
               Login por e-mail
             </span>
           </div>
-          <p className="font-sans text-xs text-on-surface-variant">
+          <p className="font-sans text-xs text-muted-foreground">
             Membro desde {formatMemberSince(user.loggedAt)}
           </p>
           <button
             type="button"
             onClick={() => setShowEdit(true)}
-            className="inline-flex items-center gap-2 mt-2 font-sans text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 mt-2 font-sans text-xs text-primary hover:text-primary transition-colors cursor-pointer"
           >
             <Edit3 size={14} />
             Editar perfil
@@ -249,39 +249,39 @@ export default function ProfileView() {
       </section>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-panel rounded-xl p-4 border border-white/5 flex flex-col gap-1">
-          <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
+        <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
             Carrinho
           </span>
           <span className="font-hanken text-2xl font-bold text-primary">
             {cartCount}
           </span>
-          <span className="font-sans text-xs text-on-surface-variant">
+          <span className="font-sans text-xs text-muted-foreground">
             {cartCount === 1 ? 'item ativo' : 'itens ativos'}
           </span>
         </div>
-        <div className="glass-panel rounded-xl p-4 border border-white/5 flex flex-col gap-1">
-          <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
+        <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
             Desconto VIP
           </span>
           <span className="font-hanken text-2xl font-bold text-tertiary">5%</span>
-          <span className="font-sans text-xs text-on-surface-variant">
+          <span className="font-sans text-xs text-muted-foreground">
             em todas as compras
           </span>
         </div>
-        <div className="glass-panel rounded-xl p-4 border border-white/5 flex flex-col gap-1">
-          <span className="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">
+        <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
             Pedidos
           </span>
-          <span className="font-hanken text-2xl font-bold text-on-surface">0</span>
-          <span className="font-sans text-xs text-on-surface-variant">
+          <span className="font-hanken text-2xl font-bold text-foreground">0</span>
+          <span className="font-sans text-xs text-muted-foreground">
             histórico em breve
           </span>
         </div>
       </div>
 
       <section className="flex flex-col gap-3">
-        <h3 className="font-hanken text-lg font-bold text-on-surface border-b border-white/10 pb-3">
+        <h3 className="font-hanken text-lg font-bold text-foreground border-b border-border pb-3">
           Atalhos
         </h3>
         <ProfileMenuItem
@@ -303,7 +303,7 @@ export default function ProfileView() {
       </section>
 
       <section className="flex flex-col gap-3">
-        <h3 className="font-hanken text-lg font-bold text-on-surface border-b border-white/10 pb-3">
+        <h3 className="font-hanken text-lg font-bold text-foreground border-b border-border pb-3">
           Configurações
         </h3>
         <ProfileMenuItem
@@ -335,7 +335,7 @@ export default function ProfileView() {
       <button
         type="button"
         onClick={handleLogout}
-        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-error/30 bg-error-container/10 text-error font-mono text-sm font-medium hover:bg-error-container/20 transition-all duration-200 cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive font-mono text-sm font-medium hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
         id="profile-logout-btn"
       >
         <LogOut size={16} />

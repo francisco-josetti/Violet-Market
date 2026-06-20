@@ -20,7 +20,7 @@ export default function EmailAuthToggleButton({
       className={`w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl border font-sans text-sm font-medium transition-all duration-200 cursor-pointer active:scale-[0.98] ${
         isActive
           ? 'bg-primary/15 border-primary/40 text-primary'
-          : 'bg-surface-container-high border-white/10 text-on-surface hover:border-primary/30 hover:bg-surface-container'
+          : 'bg-accent border-border text-foreground hover:border-primary/30 hover:bg-accent/80'
       }`}
       id="auth-email-toggle-btn"
       aria-expanded={isActive}

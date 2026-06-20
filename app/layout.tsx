@@ -4,6 +4,10 @@ import { createClient } from '../src/lib/supabase/server';
 import { AuthProvider } from '../src/contexts/AuthContext';
 import type { AuthUser } from '../src/contexts/AuthContext';
 import './globals.css';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Violet Market',
@@ -37,7 +41,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={cn("font-sans", geist.variable)}>
       <body>
         <AuthProvider initialUser={initialUser}>
           <AppShell>{children}</AppShell>

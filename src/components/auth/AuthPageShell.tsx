@@ -17,7 +17,7 @@ export default function AuthPageShell({ children }: AuthPageShellProps) {
         <div className="px-6 md:px-16 pt-8 pb-4 w-full max-w-7xl mx-auto">
           <Link
             href={routes.home}
-            className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary font-sans text-sm transition-colors"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary font-sans text-sm transition-colors"
             id="auth-back-home"
           >
             <ArrowLeft size={16} />

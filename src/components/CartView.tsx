@@ -31,21 +31,21 @@ export default function CartView() {
 if (isLoggedIn === false) {
     return (
       <div className="w-full max-w-xl mx-auto px-6 md:px-16 py-16 text-center animate-fade-in flex flex-col items-center gap-6">
-        <div className="w-20 h-20 bg-primary/10 border border-primary/25 rounded-full flex items-center justify-center text-primary">
+        <div className="w-20 h-20 bg-primary/10 border border-border rounded-full flex items-center justify-center text-primary">
           <Lock size={36} />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-on-surface">
+          <h1 className="font-hanken text-2xl sm:text-3xl font-extrabold text-foreground">
             Carrinho de Compras
           </h1>
-          <p className="font-sans text-sm text-on-surface-variant max-w-md">
+          <p className="font-sans text-sm text-muted-foreground max-w-md">
             Você não está logado. Faça login para visualizar seu carrinho e finalizar
             sua compra com segurança.
           </p>
         </div>
         <Link
           href={routes.login}
-          className="bg-brand-violet text-white px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all duration-300 flex items-center justify-center gap-2"
+          className="bg-primary text-white px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
           id="cart-login-btn"
         >
           <LogIn size={16} />
@@ -53,7 +53,7 @@ if (isLoggedIn === false) {
         </Link>
         <Link
           href={routes.catalog}
-          className="font-sans text-sm text-on-surface-variant hover:text-primary transition-colors"
+          className="font-sans text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           Continuar comprando
         </Link>
@@ -70,7 +70,7 @@ if (isLoggedIn === false) {
       <div className="w-full lg:hidden flex items-center gap-2 mb-2">
         <Link
           href={routes.catalog}
-          className="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 cursor-pointer text-sm"
+          className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 cursor-pointer text-sm"
         >
           <ArrowLeft size={16} /> Voltar à Loja
         </Link>
@@ -79,22 +79,22 @@ if (isLoggedIn === false) {
       {/* Cart Items List */}
       <section className="flex-grow flex flex-col gap-6">
         <div className="flex items-baseline justify-between mb-2">
-          <h1 className="font-hanken text-2xl sm:text-3xl font-bold text-on-surface">
+          <h1 className="font-hanken text-2xl sm:text-3xl font-bold text-foreground">
             Carrinho de Compras
           </h1>
-          <span className="font-mono text-sm text-on-surface-variant">{cartItemCount} Itens</span>
+          <span className="font-mono text-sm text-muted-foreground">{cartItemCount} Itens</span>
         </div>
 
         {cart.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center p-16 bg-surface-container-lowest/30 rounded-2xl border border-white/5 gap-4">
-            <ShoppingCart size={40} className="text-on-surface-variant opacity-60" />
-            <h3 className="font-hanken text-lg font-bold text-on-surface">Seu carrinho está vazio</h3>
-            <p className="font-sans text-sm text-on-surface-variant max-w-sm">
+          <div className="flex flex-col items-center justify-center text-center p-16 bg-muted rounded-2xl border border-border gap-4">
+            <ShoppingCart size={40} className="text-muted-foreground opacity-60" />
+            <h3 className="font-hanken text-lg font-bold text-foreground">Seu carrinho está vazio</h3>
+            <p className="font-sans text-sm text-muted-foreground max-w-sm">
               Você ainda não adicionou nenhum equipamento premium ao seu carrinho de compras.
             </p>
             <Link
               href={routes.catalog}
-              className="mt-2 bg-primary text-on-primary px-6 py-3 rounded-xl font-mono text-xs font-bold cursor-pointer hover:bg-primary-container transition-all hover:shadow-[0_0_15px_rgba(208,188,255,0.4)]"
+              className="mt-2 bg-primary text-primary-foreground px-6 py-3 rounded-xl font-mono text-xs font-bold cursor-pointer hover:bg-primary-container transition-all"
             >
               Começar a Comprar
             </Link>
@@ -104,10 +104,10 @@ if (isLoggedIn === false) {
             {cart.map((item) => (
               <div
                 key={item.product.id}
-                className="glass-panel rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center group transition-colors duration-300 hover:bg-surface-container"
+                className="bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center group transition-colors duration-300 hover:bg-muted"
               >
                 {/* Thumb Photo */}
-                <div className="w-full sm:w-28 h-28 rounded-lg bg-surface-container-high overflow-hidden shrink-0 relative border border-white/5">
+                <div className="w-full sm:w-28 h-28 rounded-lg bg-accent overflow-hidden shrink-0 relative border border-border">
                   <img
                     alt={item.product.name}
                     className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity duration-300"
@@ -121,17 +121,17 @@ if (isLoggedIn === false) {
                     <div>
                       <h3
                         onClick={() => router.push(routes.product(item.product.id))}
-                        className="font-hanken text-base sm:text-lg text-on-surface leading-tight hover:text-primary transition-colors cursor-pointer"
+                        className="font-hanken text-base sm:text-lg text-foreground leading-tight hover:text-primary transition-colors cursor-pointer"
                       >
                         {item.product.name}
                       </h3>
-                      <p className="font-sans text-xs text-on-surface-variant mt-1 mb-1">
+                      <p className="font-sans text-xs text-muted-foreground mt-1 mb-1">
                         {item.product.category}
                       </p>
                     </div>
                     <button
                       onClick={() => removeItem(item.product.id)}
-                      className="text-on-surface-variant hover:text-error transition-colors p-1.5 rounded-full hover:bg-white/5 cursor-pointer shrink-0"
+                      className="text-muted-foreground hover:text-destructive transition-colors p-1.5 rounded-full hover:bg-accent cursor-pointer shrink-0"
                       title="Excluir item"
                       id={`remove-cart-${item.product.id}`}
                     >
@@ -140,12 +140,12 @@ if (isLoggedIn === false) {
                   </div>
 
                   {/* Quantity and dynamic Price */}
-                  <div className="flex justify-between items-end mt-auto pt-3 border-t border-white/5">
+                  <div className="flex justify-between items-end mt-auto pt-3 border-t border-border">
                     {/* Select controller */}
-                    <div className="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 border border-outline-variant">
+                    <div className="flex items-center gap-1 bg-card rounded-lg p-1 border border-outline-variant">
                       <button
                         onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
-                        className="w-7 h-7 flex items-center justify-center text-on-surface hover:text-primary transition-colors rounded hover:bg-white/5 cursor-pointer"
+                        className="w-7 h-7 flex items-center justify-center text-foreground hover:text-primary transition-colors rounded hover:bg-accent cursor-pointer"
                         title="Diminuir"
                       >
                         <Minus size={13} />
@@ -153,14 +153,14 @@ if (isLoggedIn === false) {
                       <input
                         type="number"
                         title="Quantidade"
-                        className="w-8 text-center bg-transparent border-none text-on-surface font-mono text-xs focus:ring-0 p-0"
+                        className="w-8 text-center bg-transparent border-none text-foreground font-mono text-xs focus:ring-0 p-0"
                         min="1"
                         value={item.quantity}
                         onChange={(e) => updateQuantity(item.product.id, Math.max(1, parseInt(e.target.value) || 1))}
                       />
                       <button
                         onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                        className="w-7 h-7 flex items-center justify-center text-on-surface hover:text-primary transition-colors rounded hover:bg-white/5 cursor-pointer"
+                        className="w-7 h-7 flex items-center justify-center text-foreground hover:text-primary transition-colors rounded hover:bg-accent cursor-pointer"
                         title="Aumentar"
                       >
                         <Plus size={13} />
@@ -177,13 +177,13 @@ if (isLoggedIn === false) {
             ))}
 
             {/* Delivery Info Banner */}
-            <div className="bg-surface-container-low border border-primary/20 rounded-xl p-4 flex items-start gap-3 mt-4 animate-pulse">
+            <div className="bg-card border border-border rounded-xl p-4 flex items-start gap-3 mt-4 animate-pulse">
               <Truck size={20} className="text-primary mt-0.5 shrink-0" />
               <div>
-                <h4 className="font-mono text-xs text-on-surface font-bold uppercase tracking-wider">
+                <h4 className="font-mono text-xs text-foreground font-bold uppercase tracking-wider">
                   Frete Expresso Grátis
                 </h4>
-                <p className="font-sans text-xs text-on-surface-variant mt-1 leading-relaxed">
+                <p className="font-sans text-xs text-muted-foreground mt-1 leading-relaxed">
                   Você atingiu o valor mínimo para entrega prioritária com rastreamento de satélite.
                 </p>
               </div>
@@ -195,38 +195,38 @@ if (isLoggedIn === false) {
       {/* Order Summary Sidebar */}
       {cart.length > 0 && (
         <aside className="w-full lg:w-[400px] shrink-0 mt-8 lg:mt-0">
-          <div className="glass-panel rounded-xl p-5 md:p-6 lg:sticky lg:top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
-            <h2 className="font-hanken text-lg md:text-xl font-bold text-on-surface mb-6 border-b border-white/10 pb-3 h-8 flex items-center">
+          <div className="bg-card border border-border rounded-xl p-5 md:p-6 lg:sticky lg:top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
+            <h2 className="font-hanken text-lg md:text-xl font-bold text-foreground mb-6 border-b border-border pb-3 h-8 flex items-center">
               Resumo do Pedido
             </h2>
 
             <div className="flex flex-col gap-3 mb-6">
-              <div className="flex justify-between items-center text-on-surface-variant font-sans text-xs sm:text-sm">
+              <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">
                 <span>Subtotal</span>
-                <span className="font-mono font-semibold text-on-surface">
+                <span className="font-mono font-semibold text-foreground">
                   R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-on-surface-variant font-sans text-xs sm:text-sm">
+              <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">
                 <span>Desconto (Membro VIP 5%)</span>
                 <span className="font-mono font-semibold text-tertiary">
                   - R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-on-surface-variant font-sans text-xs sm:text-sm">
+              <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">
                 <span>Frete</span>
                 <span className="font-mono font-semibold text-tertiary uppercase text-xs">Grátis</span>
               </div>
             </div>
 
-            <div className="border-t border-white/10 pt-4 mb-6">
+            <div className="border-t border-border pt-4 mb-6">
               <div className="flex justify-between items-end">
-                <span className="font-hanken text-lg font-bold text-on-surface">Total</span>
+                <span className="font-hanken text-lg font-bold text-foreground">Total</span>
                 <div className="text-right">
-                  <span className="block font-sans text-[10px] text-on-surface-variant uppercase tracking-wider mb-0.5">
+                  <span className="block font-sans text-[10px] text-muted-foreground uppercase tracking-wider mb-0.5">
                     BRL
                   </span>
-                  <span className="font-mono text-xl sm:text-2xl text-primary font-extrabold text-glow-primary">
+                  <span className="font-mono text-xl sm:text-2xl text-primary font-extrabold">
                     R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
@@ -235,14 +235,14 @@ if (isLoggedIn === false) {
 
             <button
               onClick={() => setShowCheckout(true)}
-              className="w-full bg-brand-violet hover:bg-primary-container text-white py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] flex items-center justify-center gap-2 cursor-pointer scale-100 active:scale-[0.98]"
+              className="w-full bg-primary hover:bg-primary-container text-white py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer scale-100 active:scale-[0.98]"
               id="checkout-action-btn"
             >
               Proceder para o Checkout
               <ArrowRight size={14} />
             </button>
 
-            <p className="text-center font-sans text-[10px] text-on-surface-variant mt-4 flex items-center justify-center gap-1.5 opacity-80 select-none">
+            <p className="text-center font-sans text-[10px] text-muted-foreground mt-4 flex items-center justify-center gap-1.5 opacity-80 select-none">
               <Lock size={12} className="text-primary" /> Pagamento 100% seguro e criptografado
             </p>
           </div>

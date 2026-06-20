@@ -36,21 +36,21 @@ export default function AddressView({ onClose }: AddressViewProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end md:justify-center overflow-y-auto md:py-12"
+      className="fixed inset-0 z-50 bg-black/80 flex items-end md:justify-center overflow-y-auto md:py-12"
       onClick={(e) => {
         if (e.currentTarget === e.target) onClose();
       }}
     >
-      <div className="glass-panel luxury-shadow rounded-t-2xl md:rounded-2xl p-6 md:p-8 w-full md:w-[28rem] md:max-w-md border-t md:border border-primary/10 max-h-[85vh] flex flex-col animate-fade-in md:my-auto">
+      <div className="bg-card border border-border shadow-lg rounded-t-2xl md:rounded-2xl p-6 md:p-8 w-full md:w-[28rem] md:max-w-md max-h-[85vh] flex flex-col animate-fade-in md:my-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-hanken text-xl font-bold text-on-surface flex items-center gap-2">
+          <h2 className="font-hanken text-xl font-bold text-foreground flex items-center gap-2">
             <MapPin size={20} className="text-primary" />
             Meus endereços
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-on-surface-variant hover:text-primary p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+            className="text-muted-foreground hover:text-primary p-1 rounded-lg hover:bg-accent transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <X size={20} />
@@ -59,34 +59,34 @@ export default function AddressView({ onClose }: AddressViewProps) {
 
         <div className="flex flex-col gap-3 mb-6 overflow-y-auto">
           {addresses.length === 0 && !showForm && (
-            <p className="text-sm text-on-surface-variant text-center py-6">
+            <p className="text-sm text-muted-foreground text-center py-6">
               Você ainda não tem endereços salvos.
             </p>
           )}
           {addresses.map((address) => (
             <div
               key={address.id}
-              className="rounded-xl border border-white/5 bg-surface-container-low/50 p-4 flex items-start justify-between gap-3"
+              className="rounded-xl border border-border bg-card p-4 flex items-start justify-between gap-3"
             >
               <div className="min-w-0">
-                <p className="font-sans text-sm font-semibold text-on-surface">
+                <p className="font-sans text-sm font-semibold text-foreground">
                   {address.label}
                 </p>
-                <p className="font-sans text-xs text-on-surface-variant mt-1">
+                <p className="font-sans text-xs text-muted-foreground mt-1">
                   {address.street}, {address.number}
                   {address.complement && ` - ${address.complement}`}
                 </p>
-                <p className="font-sans text-xs text-on-surface-variant">
+                <p className="font-sans text-xs text-muted-foreground">
                   {address.neighborhood} - {address.city}/{address.state}
                 </p>
-                <p className="font-sans text-xs text-on-surface-variant">
+                <p className="font-sans text-xs text-muted-foreground">
                   CEP {address.cep}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => handleDelete(address.id)}
-                className="text-on-surface-variant hover:text-error p-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer shrink-0"
+                className="text-muted-foreground hover:text-destructive p-1.5 rounded-lg hover:bg-accent transition-colors cursor-pointer shrink-0"
                 aria-label="Remover endereço"
               >
                 <Trash2 size={16} />

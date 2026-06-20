@@ -42,7 +42,7 @@ export default function MobileBottomNav() {
 
   return (
     <nav
-      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-surface-container-low/95 backdrop-blur-xl border-t border-white/5 transition-transform duration-300 ${
+      className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-card border-t border-border transition-transform duration-300 ${
         shouldHide ? 'translate-y-full' : 'translate-y-0'
       }`}
     >
@@ -54,7 +54,7 @@ export default function MobileBottomNav() {
             className={`relative flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 py-1 transition-colors duration-200 ${
               item.active
                 ? 'text-primary'
-                : 'text-on-surface-variant hover:text-primary'
+                : 'text-muted-foreground hover:text-primary'
             }`}
           >
             <div className={item.accent ? '-mt-1' : undefined}>

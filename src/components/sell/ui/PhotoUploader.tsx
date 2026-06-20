@@ -111,10 +111,10 @@ function PhotoUploader({ images, onChange, error }: PhotoUploaderProps) {
   return (
     <div className="flex flex-col gap-4 w-full font-sans">
       <div className="flex justify-between items-center">
-        <label className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">
+        <label className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
           Fotos do Produto ({images.length}/{MAX_PHOTOS})
         </label>
-        <span className="text-[11px] text-on-surface-variant/50">
+        <span className="text-[11px] text-muted-foreground/50">
           Mínimo de 1 foto. Arraste as fotos para reordenar.
         </span>
       </div>
@@ -124,7 +124,7 @@ function PhotoUploader({ images, onChange, error }: PhotoUploaderProps) {
         <div
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          className="border-2 border-dashed border-white/10 hover:border-primary/40 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 bg-surface-container-low/40 hover:bg-surface-container-low/80 transition-all duration-300 cursor-pointer group"
+          className="border-2 border-dashed border-border hover:border-primary/40 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 bg-card hover:bg-muted transition-all duration-300 cursor-pointer group"
           onClick={() => fileInputRef.current?.click()}
           role="button"
           tabIndex={0}
@@ -147,10 +147,10 @@ function PhotoUploader({ images, onChange, error }: PhotoUploaderProps) {
             <UploadCloud className="text-primary w-6 h-6" />
           </div>
           <div className="text-center">
-            <p className="text-sm font-semibold text-on-surface">
+            <p className="text-sm font-semibold text-foreground">
               Arraste e solte fotos aqui ou <span className="text-primary hover:underline">escolha arquivos</span>
             </p>
-            <p className="text-xs text-on-surface-variant/50 mt-1">
+            <p className="text-xs text-muted-foreground/50 mt-1">
               Formatos suportados: JPG, PNG, WEBP (Máx. {MAX_FILE_SIZE_MB}MB por foto)
             </p>
           </div>
@@ -159,7 +159,7 @@ function PhotoUploader({ images, onChange, error }: PhotoUploaderProps) {
 
       {/* Mensagem de Erro */}
       {displayError && (
-        <div className="flex items-center gap-2 text-xs text-error bg-error-container/10 border border-error/20 rounded-xl px-4 py-3" role="alert">
+        <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3" role="alert">
           <AlertCircle size={16} />
           <span>{displayError}</span>
         </div>
@@ -169,13 +169,13 @@ function PhotoUploader({ images, onChange, error }: PhotoUploaderProps) {
       {uploadingFiles.length > 0 && (
         <div className="flex flex-col gap-2">
           {uploadingFiles.map((file, idx) => (
-            <div key={idx} className="flex items-center gap-3 bg-surface-container border border-white/5 rounded-xl p-3">
+            <div key={idx} className="flex items-center gap-3 bg-muted border border-border rounded-xl p-3">
               <Loader2 className="w-4 h-4 text-primary animate-spin" />
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-on-surface truncate">{file.fileName}</p>
-                <div className="w-full bg-white/10 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <p className="text-xs font-medium text-foreground truncate">{file.fileName}</p>
+                <div className="w-full bg-muted h-1.5 rounded-full mt-1.5 overflow-hidden">
                   <div
-                    className="bg-brand-violet h-full transition-all duration-300"
+                    className="bg-primary h-full transition-all duration-300"
                     style={{ width: `${file.progress}%` }}
                   />
                 </div>

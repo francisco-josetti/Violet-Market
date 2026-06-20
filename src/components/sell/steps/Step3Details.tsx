@@ -95,7 +95,7 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 animate-fade-in text-on-surface">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 animate-fade-in text-foreground">
       <h2 ref={headingRef} tabIndex={-1} className="font-hanken text-2xl font-bold tracking-tight outline-none focus:ring-2 focus:ring-primary/20 rounded-md">
         Detalhes & Logística
       </h2>
@@ -103,8 +103,8 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
       {/* Descrição */}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="description" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Descrição do Produto</label>
-          <span className="text-xs text-on-surface-variant/40 font-mono">{descriptionText.length} caracteres (mín. 20)</span>
+          <label htmlFor="description" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Descrição do Produto</label>
+          <span className="text-xs text-muted-foreground/40 font-mono">{descriptionText.length} caracteres (mín. 20)</span>
         </div>
         <textarea
           id="description"
@@ -114,12 +114,12 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
             register('description').ref(e);
             (descRef.current as HTMLTextAreaElement | null) = e;
           }}
-          className={`w-full bg-surface-container-low border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all resize-y ${
-            errors.description ? 'border-error/50 focus:border-error/50 focus:ring-error/20' : 'border-white/10 focus:border-primary/50 focus:ring-primary/25'
+          className={`w-full bg-card border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all resize-y ${
+            errors.description ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : 'border-border focus:border-primary focus:ring-primary/25'
           }`}
           placeholder="Descreva detalhes como características, estado de conservação, acessórios inclusos e tempo de uso..."
         />
-        {errors.description && <p className="text-xs text-error font-sans" role="alert">{errors.description.message}</p>}
+        {errors.description && <p className="text-xs text-destructive font-sans" role="alert">{errors.description.message}</p>}
       </div>
 
       {/* Variantes Dinâmicas */}
@@ -131,7 +131,7 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
 
       {/* Opções de Frete */}
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Opções de Frete</span>
+        <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Opções de Frete</span>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {SHIPPING_OPTIONS.map((opt) => {
             const isSelected = selectedShipping === opt.id;
@@ -140,8 +140,8 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
                 key={opt.id}
                 className={`flex flex-col p-4 rounded-xl border text-left cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'border-brand-violet bg-brand-violet/10 text-white shadow-[0_0_15px_rgba(139,92,246,0.15)]'
-                    : 'border-white/10 bg-surface-container-low/40 text-on-surface-variant hover:border-white/20'
+                    ? 'border-primary bg-primary/10 text-white'
+                    : 'border-border bg-card text-muted-foreground hover:border-primary/20'
                 }`}
               >
                 <input type="radio" value={opt.id} {...register('shippingType')} className="sr-only" />
@@ -157,34 +157,34 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
       {selectedShipping === 'calculate' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="weightKg" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Peso do Produto (kg)</label>
+            <label htmlFor="weightKg" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Peso do Produto (kg)</label>
             <input
               id="weightKg"
               type="number"
               step="0.01"
               {...register('weightKg')}
-              className={`w-full bg-surface-container-low border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
-                errors.weightKg ? 'border-error/50 focus:border-error/50 focus:ring-error/20' : 'border-white/10 focus:border-primary/50 focus:ring-primary/25'
+              className={`w-full bg-card border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
+                errors.weightKg ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : 'border-border focus:border-primary focus:ring-primary/25'
               }`}
               placeholder="Ex: 0.85"
             />
-            {errors.weightKg && <p className="text-xs text-error font-sans" role="alert">{errors.weightKg.message}</p>}
+            {errors.weightKg && <p className="text-xs text-destructive font-sans" role="alert">{errors.weightKg.message}</p>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="cep" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">CEP de Origem</label>
+            <label htmlFor="cep" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">CEP de Origem</label>
             <input
               id="cep"
               type="text"
               maxLength={8}
               {...register('cep')}
-              className={`w-full bg-surface-container-low border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
-                errors.cep ? 'border-error/50 focus:border-error/50 focus:ring-error/20' : 'border-white/10 focus:border-primary/50 focus:ring-primary/25'
+              className={`w-full bg-card border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
+                errors.cep ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : 'border-border focus:border-primary focus:ring-primary/25'
               }`}
               placeholder="Ex: 01001000"
             />
             {addressDetails && <p className="text-xs text-primary font-sans mt-0.5">{addressDetails}</p>}
-            {errors.cep && <p className="text-xs text-error font-sans" role="alert">{errors.cep.message}</p>}
+            {errors.cep && <p className="text-xs text-destructive font-sans" role="alert">{errors.cep.message}</p>}
           </div>
         </div>
       )}
@@ -195,14 +195,14 @@ function Step3Details({ defaultValues, onStepComplete, onBack }: StepProps) {
           <button
             type="button"
             onClick={onBack}
-            className="flex-1 bg-surface-container-low hover:bg-surface-container border border-white/10 hover:border-white/20 text-on-surface font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer text-center"
+            className="flex-1 bg-card hover:bg-muted border border-border hover:border-primary/20 text-foreground font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer text-center"
           >
             Voltar
           </button>
         )}
         <button
           type="submit"
-          className="flex-1 bg-brand-violet hover:bg-brand-violet/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] cursor-pointer text-center"
+          className="flex-1 bg-primary hover:bg-primary/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer text-center"
         >
           Avançar para Revisão
         </button>

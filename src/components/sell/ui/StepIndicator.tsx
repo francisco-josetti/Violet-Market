@@ -35,17 +35,17 @@ function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
                 disabled={!isClickable}
                 onClick={() => isClickable && onStepClick(step.id)}
                 className={`flex items-center gap-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-lg p-1.5 transition-all duration-300 ${
-                  isClickable ? 'cursor-pointer hover:bg-white/5' : 'cursor-default'
+                  isClickable ? 'cursor-pointer hover:bg-accent' : 'cursor-default'
                 }`}
                 aria-current={isActive ? 'step' : undefined}
               >
                 <div
                   className={`w-7 h-7 md:w-9 md:h-9 rounded-full flex items-center justify-center font-mono font-bold text-xs md:text-sm transition-all duration-300 border ${
                     isCompleted
-                      ? 'bg-tertiary border-tertiary text-on-tertiary shadow-[0_0_15px_rgba(78,222,163,0.3)]'
+                      ? 'bg-tertiary border-tertiary text-on-tertiary'
                       : isActive
-                      ? 'bg-brand-violet border-brand-violet text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]'
-                      : 'bg-surface-container-low border-white/10 text-on-surface-variant'
+                      ? 'bg-primary border-primary text-white'
+                      : 'bg-card border-border text-muted-foreground'
                   }`}
                 >
                   {isCompleted ? <Check className="w-4 h-4" /> : step.id}
@@ -53,12 +53,12 @@ function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
                 <div className="hidden sm:block">
                   <p
                     className={`font-semibold text-xs tracking-wide uppercase transition-colors ${
-                      isActive ? 'text-primary' : isCompleted ? 'text-tertiary' : 'text-on-surface-variant/70'
+                      isActive ? 'text-primary' : isCompleted ? 'text-tertiary' : 'text-muted-foreground/70'
                     }`}
                   >
                     {step.label}
                   </p>
-                  <p className="text-[10px] text-on-surface-variant/50 leading-tight">
+                  <p className="text-[10px] text-muted-foreground/50 leading-tight">
                     {step.desc}
                   </p>
                 </div>
@@ -67,7 +67,7 @@ function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
               {idx < STEPS.length - 1 && (
                 <div
                   className={`flex-1 h-[2px] transition-all duration-500 rounded ${
-                    isCompleted ? 'bg-tertiary/60' : 'bg-white/10'
+                    isCompleted ? 'bg-tertiary/60' : 'bg-border'
                   }`}
                   aria-hidden="true"
                 />

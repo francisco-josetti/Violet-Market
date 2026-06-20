@@ -55,7 +55,7 @@ function Input({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">
+      <label htmlFor={id} className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
         {label}
       </label>
       <input
@@ -66,7 +66,7 @@ function Input({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-surface-container-low border border-white/10 rounded-xl px-4 py-3 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all"
+        className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary/25 transition-all"
       />
     </div>
   );
@@ -128,13 +128,13 @@ export default function AddressForm({ onSaved, onCancel }: AddressFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 animate-fade-in">
       {error && (
-        <div className="text-sm text-error bg-error-container/10 border border-error/20 rounded-xl px-4 py-3" role="alert">
+        <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3" role="alert">
           {error}
         </div>
       )}
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="address-cep" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">
+        <label htmlFor="address-cep" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
           CEP
         </label>
         <div className="flex gap-2">
@@ -146,13 +146,13 @@ export default function AddressForm({ onSaved, onCancel }: AddressFormProps) {
             onChange={(e) => handleCepChange(e.target.value)}
             onBlur={handleFillByCep}
             placeholder="00000-000"
-            className="flex-1 bg-surface-container-low border border-white/10 rounded-xl px-4 py-3 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all"
+            className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary/25 transition-all"
           />
           <button
             type="button"
             onClick={handleFillByCep}
             disabled={loadingCep || sanitizeCep(form.cep).length !== 8}
-            className="px-4 rounded-xl bg-surface-container-low border border-white/10 text-on-surface font-mono text-xs hover:bg-surface-container disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="px-4 rounded-xl bg-muted border border-border text-foreground font-mono text-xs hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             {loadingCep ? '...' : 'Buscar'}
           </button>
@@ -199,13 +199,13 @@ export default function AddressForm({ onSaved, onCancel }: AddressFormProps) {
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-surface-container-low border border-white/10 text-on-surface font-mono text-xs py-3.5 rounded-xl hover:bg-surface-container transition-colors cursor-pointer"
+          className="flex-1 bg-muted border border-border text-foreground font-mono text-xs py-3.5 rounded-xl hover:bg-accent transition-colors cursor-pointer"
         >
           Cancelar
         </button>
         <button
           type="submit"
-          className="flex-1 bg-brand-violet text-white py-3.5 rounded-xl font-mono text-xs font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all duration-300 cursor-pointer"
+          className="flex-1 bg-primary text-primary-foreground py-3.5 rounded-xl font-mono text-xs font-medium tracking-wide hover:bg-primary/90 transition-all duration-300 cursor-pointer"
         >
           Salvar
         </button>

@@ -73,10 +73,10 @@ function SellWizard() {
     <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 md:gap-8 font-sans">
       {/* Banner de Rascunho */}
       {hasDraft && (
-        <div className="glass-panel border border-brand-violet/20 rounded-2xl p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in shadow-[0_0_30px_rgba(139,92,246,0.1)]">
+        <div className="bg-card border border-primary/20 rounded-2xl p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in">
           <div>
             <h3 className="font-hanken text-base font-bold text-primary">Anúncio em andamento</h3>
-            <p className="text-xs text-on-surface-variant/70 mt-1">
+            <p className="text-xs text-muted-foreground/70 mt-1">
               Você possui um rascunho salvo anteriormente. Deseja continuar de onde parou?
             </p>
           </div>
@@ -84,14 +84,14 @@ function SellWizard() {
             <button
               type="button"
               onClick={handleDiscardDraft}
-              className="px-4 py-2 border border-white/10 hover:border-error/30 hover:bg-error-container/10 text-on-surface hover:text-error rounded-xl font-mono text-xs transition-all cursor-pointer"
+              className="px-4 py-2 border border-border hover:border-destructive/30 hover:bg-destructive/10 text-foreground hover:text-destructive rounded-xl font-mono text-xs transition-all cursor-pointer"
             >
               Descartar
             </button>
             <button
               type="button"
               onClick={handleResumeDraft}
-              className="px-4 py-2 bg-brand-violet hover:bg-brand-violet/90 text-white rounded-xl font-mono text-xs font-bold transition-all shadow-[0_0_15px_rgba(139,92,246,0.25)] cursor-pointer"
+              className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl font-mono text-xs font-bold transition-all cursor-pointer"
             >
               Continuar Anúncio
             </button>
@@ -100,12 +100,12 @@ function SellWizard() {
       )}
 
       {/* Indicador de Passos */}
-      <div className="glass-panel border border-white/5 rounded-2xl p-5 md:px-6 md:py-5">
+      <div className="bg-card border border-border rounded-2xl p-5 md:px-6 md:py-5">
         <StepIndicator currentStep={currentStep} onStepClick={setCurrentStep} />
       </div>
 
       {/* Conteúdo da Etapa */}
-      <div className="glass-panel border border-white/5 rounded-2xl p-6 md:p-8 luxury-shadow">
+      <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-lg">
         {currentStep === 1 && (
           <Step1Info defaultValues={formData} onStepComplete={handleStepComplete} />
         )}

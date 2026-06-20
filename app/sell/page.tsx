@@ -27,9 +27,9 @@ function SellPage() {
   // Enquanto verifica o status de login, exibe um loading spinner premium
   if (loggedIn === null) {
     return (
-      <div className="flex-grow flex flex-col items-center justify-center min-h-[50vh] text-on-surface">
+      <div className="flex-grow flex flex-col items-center justify-center min-h-[50vh] text-foreground">
         <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
-        <p className="font-mono text-xs uppercase tracking-widest text-on-surface-variant/70">
+        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground/70">
           Autenticando sessão...
         </p>
       </div>
@@ -47,7 +47,7 @@ function SellPage() {
         <h1 className="font-hanken text-3xl md:text-4xl font-extrabold tracking-tight text-white">
           Anunciar Produto
         </h1>
-        <p className="font-sans text-sm md:text-base text-on-surface-variant/80">
+        <p className="font-sans text-sm md:text-base text-muted-foreground/80">
           Publique seu item no Violet Market e alcance compradores exigentes.
         </p>
       </header>

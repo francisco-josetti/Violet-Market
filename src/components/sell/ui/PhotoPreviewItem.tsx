@@ -26,7 +26,7 @@ function PhotoPreviewItem({
   onMove,
 }: PhotoPreviewItemProps) {
   return (
-    <div className="relative aspect-square rounded-2xl overflow-hidden bg-surface-container-high border border-white/5 group flex flex-col justify-end shadow-lg font-sans">
+    <div className="relative aspect-square rounded-2xl overflow-hidden bg-accent border border-border group flex flex-col justify-end shadow-lg font-sans">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={url}
@@ -42,12 +42,12 @@ function PhotoPreviewItem({
       )}
 
       {/* Painel de Controles */}
-      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-2.5 z-20">
+      <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-2.5 z-20">
         <div className="flex justify-end">
           <button
             type="button"
             onClick={() => onRemove(index)}
-            className="p-1.5 bg-error-container/80 hover:bg-error-container text-on-error-container hover:text-white rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 bg-destructive/80 hover:bg-destructive text-white hover:text-white rounded-lg transition-colors cursor-pointer"
             title="Excluir foto"
           >
             <Trash2 size={14} />
@@ -60,7 +60,7 @@ function PhotoPreviewItem({
             type="button"
             disabled={index === 0}
             onClick={() => onMove(index, 'left')}
-            className="flex-1 p-1 bg-white/10 hover:bg-white/20 text-white rounded disabled:opacity-40 disabled:hover:bg-white/10 disabled:cursor-not-allowed flex justify-center transition-colors cursor-pointer"
+            className="flex-1 p-1 bg-muted hover:bg-accent text-white rounded disabled:opacity-40 disabled:hover:bg-muted disabled:cursor-not-allowed flex justify-center transition-colors cursor-pointer"
             title="Mover para esquerda"
           >
             <ArrowLeft size={14} />
@@ -69,7 +69,7 @@ function PhotoPreviewItem({
             type="button"
             disabled={isLast}
             onClick={() => onMove(index, 'right')}
-            className="flex-1 p-1 bg-white/10 hover:bg-white/20 text-white rounded disabled:opacity-40 disabled:hover:bg-white/10 disabled:cursor-not-allowed flex justify-center transition-colors cursor-pointer"
+            className="flex-1 p-1 bg-muted hover:bg-accent text-white rounded disabled:opacity-40 disabled:hover:bg-muted disabled:cursor-not-allowed flex justify-center transition-colors cursor-pointer"
             title="Mover para direita"
           >
             <ArrowRight size={14} />

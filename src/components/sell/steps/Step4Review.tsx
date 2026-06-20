@@ -69,29 +69,29 @@ function Step4Review({ formData, goToStep, onBack }: Step4ReviewProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 animate-fade-in text-on-surface font-sans">
+    <div className="flex flex-col gap-6 animate-fade-in text-foreground font-sans">
       <h2 ref={headingRef} tabIndex={-1} className="font-hanken text-2xl font-bold tracking-tight outline-none focus:ring-2 focus:ring-primary/20 rounded-md">
         Revisar & Publicar
       </h2>
 
       {error && (
-        <div className="text-sm text-error bg-error-container/10 border border-error/20 rounded-xl px-4 py-3" role="alert">
+        <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3" role="alert">
           {error}
         </div>
       )}
 
       {/* Seção 1: Informações Básicas */}
-      <div className="glass-panel border border-white/5 rounded-2xl p-5 flex flex-col gap-4">
-        <div className="flex justify-between items-center border-b border-white/5 pb-3">
+      <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-center border-b border-border pb-3">
           <h3 className="text-sm font-mono font-semibold text-primary uppercase tracking-wider flex items-center gap-2">
             <Info size={16} /> Informações Básicas
           </h3>
-          <button type="button" onClick={() => goToStep(1)} className="text-xs text-primary hover:text-brand-violet flex items-center gap-1 transition-colors cursor-pointer font-medium">
+          <button type="button" onClick={() => goToStep(1)} className="text-xs text-primary hover:text-primary flex items-center gap-1 transition-colors cursor-pointer font-medium">
             <Edit3 size={12} /> Editar
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-xs md:text-sm">
-          <p><span className="opacity-50">Título:</span> <strong className="font-medium text-on-surface">{formData.title}</strong></p>
+          <p><span className="opacity-50">Título:</span> <strong className="font-medium text-foreground">{formData.title}</strong></p>
           <p><span className="opacity-50">Categoria:</span> <span className="font-medium">{getCategoryName(formData.categoryId, formData.subcategory)}</span></p>
           <p><span className="opacity-50">Condição:</span> <span className="font-medium">{CONDITION_LABELS[formData.condition || 'new']}</span></p>
           <p><span className="opacity-50">Estoque:</span> <span className="font-medium font-mono">{formData.stock} unidades</span></p>
@@ -101,18 +101,18 @@ function Step4Review({ formData, goToStep, onBack }: Step4ReviewProps) {
       </div>
 
       {/* Seção 2: Fotos */}
-      <div className="glass-panel border border-white/5 rounded-2xl p-5 flex flex-col gap-4">
-        <div className="flex justify-between items-center border-b border-white/5 pb-3">
+      <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-center border-b border-border pb-3">
           <h3 className="text-sm font-mono font-semibold text-primary uppercase tracking-wider flex items-center gap-2">
             <Image size={16} /> Fotos do Produto ({formData.images?.length || 0})
           </h3>
-          <button type="button" onClick={() => goToStep(2)} className="text-xs text-primary hover:text-brand-violet flex items-center gap-1 transition-colors cursor-pointer font-medium">
+          <button type="button" onClick={() => goToStep(2)} className="text-xs text-primary hover:text-primary flex items-center gap-1 transition-colors cursor-pointer font-medium">
             <Edit3 size={12} /> Editar
           </button>
         </div>
         <div className="flex flex-wrap gap-3">
           {formData.images?.map((url, idx) => (
-            <div key={idx} className="relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border border-white/5 bg-surface-container">
+            <div key={idx} className="relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border border-border bg-muted">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={url} alt={`Resumo ${idx}`} className="w-full h-full object-cover" />
               {idx === 0 && (
@@ -126,26 +126,26 @@ function Step4Review({ formData, goToStep, onBack }: Step4ReviewProps) {
       </div>
 
       {/* Seção 3: Detalhes & Logística */}
-      <div className="glass-panel border border-white/5 rounded-2xl p-5 flex flex-col gap-4">
-        <div className="flex justify-between items-center border-b border-white/5 pb-3">
+      <div className="bg-card border border-border rounded-2xl p-5 flex flex-col gap-4">
+        <div className="flex justify-between items-center border-b border-border pb-3">
           <h3 className="text-sm font-mono font-semibold text-primary uppercase tracking-wider flex items-center gap-2">
             <Truck size={16} /> Detalhes & Envio
           </h3>
-          <button type="button" onClick={() => goToStep(3)} className="text-xs text-primary hover:text-brand-violet flex items-center gap-1 transition-colors cursor-pointer font-medium">
+          <button type="button" onClick={() => goToStep(3)} className="text-xs text-primary hover:text-primary flex items-center gap-1 transition-colors cursor-pointer font-medium">
             <Edit3 size={12} /> Editar
           </button>
         </div>
         <div className="flex flex-col gap-3 text-xs md:text-sm">
           <div>
             <span className="opacity-50 block mb-1">Descrição:</span>
-            <p className="whitespace-pre-line text-on-surface-variant leading-relaxed bg-surface-container-low/30 p-3.5 rounded-xl border border-white/5">{formData.description}</p>
+            <p className="whitespace-pre-line text-muted-foreground leading-relaxed bg-card p-3.5 rounded-xl border border-border">{formData.description}</p>
           </div>
           {formData.variants && formData.variants.length > 0 && (
             <div>
               <span className="opacity-50 block mb-1">Variantes:</span>
               <div className="flex flex-wrap gap-2">
                 {formData.variants.map((v, i) => (
-                  <div key={i} className="bg-white/5 border border-white/5 px-2.5 py-1 rounded-lg text-xs">
+                  <div key={i} className="bg-muted border border-border px-2.5 py-1 rounded-lg text-xs">
                     <span className="font-semibold text-primary">{v.name}:</span> {v.values.join(', ')}
                   </div>
                 ))}
@@ -170,7 +170,7 @@ function Step4Review({ formData, goToStep, onBack }: Step4ReviewProps) {
           type="button"
           disabled={loading}
           onClick={onBack}
-          className="flex-1 bg-surface-container-low hover:bg-surface-container border border-white/10 hover:border-white/20 text-on-surface font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 bg-card hover:bg-muted border border-border hover:border-primary/20 text-foreground font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Voltar
         </button>
@@ -178,7 +178,7 @@ function Step4Review({ formData, goToStep, onBack }: Step4ReviewProps) {
           type="button"
           disabled={loading}
           onClick={handlePublish}
-          className="flex-1 bg-tertiary hover:bg-tertiary/90 text-on-tertiary font-mono text-sm font-bold py-3.5 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(78,222,163,0.3)] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-55 disabled:cursor-not-allowed"
+          className="flex-1 bg-tertiary hover:bg-tertiary/90 text-on-tertiary font-mono text-sm font-bold py-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-55 disabled:cursor-not-allowed"
         >
           {loading ? (
             <>

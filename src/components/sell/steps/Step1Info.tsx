@@ -127,7 +127,7 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 animate-fade-in text-on-surface">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 animate-fade-in text-foreground">
       <h2 ref={headingRef} tabIndex={-1} className="font-hanken text-2xl font-bold tracking-tight outline-none focus:ring-2 focus:ring-primary/20 rounded-md">
         Informações Básicas do Produto
       </h2>
@@ -135,8 +135,8 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
       {/* Título */}
       <div className="flex flex-col gap-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="title" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Título do Anúncio</label>
-          <span className="text-xs text-on-surface-variant/40 font-mono">{titleText.length}/120</span>
+          <label htmlFor="title" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Título do Anúncio</label>
+          <span className="text-xs text-muted-foreground/40 font-mono">{titleText.length}/120</span>
         </div>
         <input
           id="title"
@@ -146,18 +146,18 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
             register('title').ref(e);
             (firstInputRef.current as HTMLInputElement | null) = e;
           }}
-          className={`w-full bg-surface-container-low border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
-            errors.title ? 'border-error/50 focus:border-error/50 focus:ring-error/20' : 'border-white/10 focus:border-primary/50 focus:ring-primary/25'
+          className={`w-full bg-card border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
+            errors.title ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : 'border-border focus:border-primary focus:ring-primary/25'
           }`}
           placeholder="Ex: Drone Fotográfico Quantum Pro V2 com Câmera 8K"
         />
-        {errors.title && <p className="text-xs text-error font-sans" role="alert">{errors.title.message}</p>}
+        {errors.title && <p className="text-xs text-destructive font-sans" role="alert">{errors.title.message}</p>}
       </div>
 
       {/* Categoria & Subcategoria */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="categoryId" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Categoria</label>
+          <label htmlFor="categoryId" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Categoria</label>
           <select
             id="categoryId"
             {...register('categoryId')}
@@ -165,34 +165,34 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
               register('categoryId').onChange(e);
               setValue('subcategory', '');
             }}
-            className="w-full bg-surface-container-low border border-white/10 rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all text-on-surface"
+            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary/25 transition-all text-foreground"
           >
             <option value="">Selecione uma categoria</option>
             {CATEGORIES.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
           </select>
-          {errors.categoryId && <p className="text-xs text-error font-sans" role="alert">{errors.categoryId.message}</p>}
+          {errors.categoryId && <p className="text-xs text-destructive font-sans" role="alert">{errors.categoryId.message}</p>}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="subcategory" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Subcategoria</label>
+          <label htmlFor="subcategory" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Subcategoria</label>
           <select
             id="subcategory"
             {...register('subcategory')}
             disabled={!selectedCategory}
-            className="w-full bg-surface-container-low border border-white/10 rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all text-on-surface disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary/25 transition-all text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <option value="">Selecione primeiro a categoria</option>
             {selectedCatData?.subcategories.map((sub) => (
               <option key={sub.id} value={sub.id}>{sub.name}</option>
             ))}
           </select>
-          {errors.subcategory && <p className="text-xs text-error font-sans" role="alert">{errors.subcategory.message}</p>}
+          {errors.subcategory && <p className="text-xs text-destructive font-sans" role="alert">{errors.subcategory.message}</p>}
         </div>
       </div>
 
       {/* Condição do Produto */}
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Condição do Produto</span>
+        <span className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Condição do Produto</span>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {CONDITIONS.map((cond) => {
             const isSelected = watch('condition') === cond.id;
@@ -201,8 +201,8 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
                 key={cond.id}
                 className={`flex flex-col p-3 rounded-xl border text-left cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'border-brand-violet bg-brand-violet/10 text-white shadow-[0_0_15px_rgba(139,92,246,0.15)]'
-                    : 'border-white/10 bg-surface-container-low/40 text-on-surface-variant hover:border-white/20'
+                    ? 'border-primary bg-primary/10 text-white'
+                    : 'border-border bg-card text-muted-foreground hover:border-primary/20'
                 }`}
               >
                 <input
@@ -236,26 +236,26 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
         />
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="stock" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">Quantidade em Estoque</label>
+          <label htmlFor="stock" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Quantidade em Estoque</label>
           <input
             id="stock"
             type="number"
             {...register('stock', { valueAsNumber: true })}
-            className={`w-full bg-surface-container-low border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
-              errors.stock ? 'border-error/50 focus:border-error/50 focus:ring-error/20' : 'border-white/10 focus:border-primary/50 focus:ring-primary/25'
+            className={`w-full bg-card border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 transition-all ${
+              errors.stock ? 'border-destructive focus:border-destructive focus:ring-destructive/20' : 'border-border focus:border-primary focus:ring-primary/25'
             }`}
             placeholder="Ex: 5"
           />
-          {errors.stock && <p className="text-xs text-error font-sans" role="alert">{errors.stock.message}</p>}
+          {errors.stock && <p className="text-xs text-destructive font-sans" role="alert">{errors.stock.message}</p>}
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="sku" className="font-mono text-xs text-on-surface-variant uppercase tracking-wider">SKU Interno (Opcional)</label>
+          <label htmlFor="sku" className="font-mono text-xs text-muted-foreground uppercase tracking-wider">SKU Interno (Opcional)</label>
           <input
             id="sku"
             type="text"
             {...register('sku')}
-            className="w-full bg-surface-container-low border border-white/10 rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all text-on-surface"
+            className="w-full bg-card border border-border rounded-xl px-4 py-3 text-sans text-sm focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary/25 transition-all text-foreground"
             placeholder="Ex: DR-QTY-V2"
           />
         </div>
@@ -263,7 +263,7 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
 
       <button
         type="submit"
-        className="w-full bg-brand-violet hover:bg-brand-violet/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] cursor-pointer mt-4"
+        className="w-full bg-primary hover:bg-primary/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer mt-4"
       >
         Avançar para Mídia
       </button>

@@ -118,30 +118,30 @@ export default function RegisterView() {
 
   const inputErrorClass = (field: string) =>
     fieldErrors[field]
-      ? 'border-error/50 focus:border-error/50 focus:ring-error/20'
-      : 'border-white/10 focus:border-primary/50 focus:ring-primary/25';
+      ? 'border-destructive focus:border-destructive focus:ring-destructive/20'
+      : 'border-border focus:border-primary focus:ring-primary/25';
 
   return (
     <AuthPageShell>
-      <div className="glass-panel luxury-shadow rounded-2xl p-8 md:p-10 flex flex-col gap-6 border border-primary/10">
+      <div className="bg-card border border-border rounded-2xl p-8 md:p-10 flex flex-col gap-6 shadow-lg">
         <div className="text-center flex flex-col gap-2">
           <Link
             href={routes.home}
-            className="font-hanken text-2xl font-extrabold text-primary tracking-tight hover:text-white transition-colors"
+            className="font-hanken text-2xl font-extrabold text-primary tracking-tight hover:text-foreground transition-colors"
           >
             Violet Market
           </Link>
-          <h1 className="font-hanken text-xl font-bold text-on-surface">
+          <h1 className="font-hanken text-xl font-bold text-foreground">
             Crie sua conta
           </h1>
-          <p className="font-sans text-sm text-on-surface-variant">
+          <p className="font-sans text-sm text-muted-foreground">
             Junte-se ao marketplace de performance de elite
           </p>
         </div>
 
         {success && (
           <p
-            className="text-sm text-tertiary bg-tertiary-container/15 border border-tertiary/20 rounded-lg px-4 py-3 font-sans"
+            className="text-sm text-tertiary bg-tertiary/10 border border-tertiary/20 rounded-lg px-4 py-3 font-sans"
             role="status"
           >
             {success}
@@ -171,21 +171,21 @@ export default function RegisterView() {
             noValidate
           >
             {apiError && (
-              <div className="text-sm text-error bg-error-container/10 border border-error/20 rounded-xl px-4 py-3" role="alert">
+              <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3" role="alert">
                 {apiError}
               </div>
             )}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="register-name"
-                className="font-mono text-xs text-on-surface-variant uppercase tracking-wider"
+                className="font-mono text-xs text-muted-foreground uppercase tracking-wider"
               >
                 Nome completo
               </label>
               <div className="relative">
                 <User
                   size={18}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
                 />
                 <input
                   id="register-name"
@@ -197,7 +197,7 @@ export default function RegisterView() {
                     clearFieldError('name');
                   }}
                   placeholder="Seu nome"
-                  className={`w-full bg-surface-container-low border rounded-xl pl-11 pr-4 py-3.5 text-on-surface font-sans text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 transition-all ${inputErrorClass('name')}`}
+                  className={`w-full bg-background border rounded-xl pl-11 pr-4 py-3.5 text-foreground font-sans text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 transition-all ${inputErrorClass('name')}`}
                 />
               </div>
               <FormFieldError message={fieldErrors.name} />
@@ -206,14 +206,14 @@ export default function RegisterView() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="register-email"
-                className="font-mono text-xs text-on-surface-variant uppercase tracking-wider"
+                className="font-mono text-xs text-muted-foreground uppercase tracking-wider"
               >
                 E-mail
               </label>
               <div className="relative">
                 <Mail
                   size={18}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
                 />
                 <input
                   id="register-email"
@@ -225,7 +225,7 @@ export default function RegisterView() {
                     clearFieldError('email');
                   }}
                   placeholder="seu@email.com"
-                  className={`w-full bg-surface-container-low border rounded-xl pl-11 pr-4 py-3.5 text-on-surface font-sans text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 transition-all ${inputErrorClass('email')}`}
+                  className={`w-full bg-background border rounded-xl pl-11 pr-4 py-3.5 text-foreground font-sans text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 transition-all ${inputErrorClass('email')}`}
                 />
               </div>
               <FormFieldError message={fieldErrors.email} />
@@ -234,14 +234,14 @@ export default function RegisterView() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="register-password"
-                className="font-mono text-xs text-on-surface-variant uppercase tracking-wider"
+                className="font-mono text-xs text-muted-foreground uppercase tracking-wider"
               >
                 Senha
               </label>
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
                 />
                 <input
                   id="register-password"
@@ -253,12 +253,12 @@ export default function RegisterView() {
                     clearFieldError('password');
                   }}
                   placeholder="Mínimo 8 caracteres"
-                  className={`w-full bg-surface-container-low border rounded-xl pl-11 pr-12 py-3.5 text-on-surface font-sans text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 transition-all ${inputErrorClass('password')}`}
+                  className={`w-full bg-background border rounded-xl pl-11 pr-12 py-3.5 text-foreground font-sans text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 transition-all ${inputErrorClass('password')}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors cursor-pointer"
                   aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -270,14 +270,14 @@ export default function RegisterView() {
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="register-confirm-password"
-                className="font-mono text-xs text-on-surface-variant uppercase tracking-wider"
+                className="font-mono text-xs text-muted-foreground uppercase tracking-wider"
               >
                 Confirmar senha
               </label>
               <div className="relative">
                 <Lock
                   size={18}
-                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
+                  className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
                 />
                 <input
                   id="register-confirm-password"
@@ -289,7 +289,7 @@ export default function RegisterView() {
                     clearFieldError('confirmPassword');
                   }}
                   placeholder="Repita a senha"
-                  className={`w-full bg-surface-container-low border rounded-xl pl-11 pr-4 py-3.5 text-on-surface font-sans text-sm placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-1 transition-all ${inputErrorClass('confirmPassword')}`}
+                  className={`w-full bg-background border rounded-xl pl-11 pr-4 py-3.5 text-foreground font-sans text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 transition-all ${inputErrorClass('confirmPassword')}`}
                 />
               </div>
               <FormFieldError message={fieldErrors.confirmPassword} />
@@ -304,9 +304,9 @@ export default function RegisterView() {
                     setField('acceptedTerms', e.target.checked);
                     clearFieldError('acceptedTerms');
                   }}
-                  className="mt-1 w-4 h-4 rounded border-white/20 bg-surface-container-low text-brand-violet focus:ring-primary/30 cursor-pointer accent-brand-violet"
+                  className="mt-1 w-4 h-4 rounded border-border bg-background text-primary focus:ring-primary/30 cursor-pointer accent-primary"
                 />
-                <span className="font-sans text-xs text-on-surface-variant leading-relaxed group-hover:text-on-surface transition-colors">
+                <span className="font-sans text-xs text-muted-foreground leading-relaxed group-hover:text-foreground transition-colors">
                   Li e aceito os{' '}
                   <a href="#" className="text-primary hover:underline">
                     Termos de Uso
@@ -323,7 +323,7 @@ export default function RegisterView() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-violet text-white py-4 rounded-xl font-mono text-sm font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-1"
+              className="w-full bg-primary text-primary-foreground py-4 rounded-xl font-mono text-sm font-medium tracking-wide hover:bg-primary/90 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer mt-1"
               id="register-submit-btn"
             >
               {loading ? 'Criando conta...' : 'Criar conta com e-mail'}
@@ -331,11 +331,11 @@ export default function RegisterView() {
           </form>
         )}
 
-        <p className="text-center font-sans text-sm text-on-surface-variant">
+        <p className="text-center font-sans text-sm text-muted-foreground">
           Já tem uma conta?{' '}
           <Link
             href={routes.login}
-            className="text-primary font-semibold hover:text-brand-violet transition-colors"
+            className="text-primary font-semibold hover:text-primary/80 transition-colors"
           >
             Fazer login
           </Link>

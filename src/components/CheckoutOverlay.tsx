@@ -78,29 +78,29 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
   if (checkoutComplete) {
     return (
       <div
-        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end md:justify-center overflow-y-auto md:py-12"
+        className="fixed inset-0 z-50 bg-black/80 flex items-end md:justify-center overflow-y-auto md:py-12"
         onClick={(e) => { if (e.currentTarget === e.target) onClose(); }}
       >
-        <div className="glass-panel luxury-shadow rounded-t-2xl md:rounded-2xl p-6 md:p-8 w-full md:w-[28rem] border-t md:border border-primary/10 flex flex-col items-center gap-6 text-center animate-fade-in md:my-auto">
+        <div className="bg-card border border-border shadow-xl rounded-2xl rounded-t-2xl md:rounded-2xl p-6 md:p-8 w-full md:w-[28rem] border-t md:border flex flex-col items-center gap-6 text-center animate-fade-in md:my-auto">
           <div className="w-16 h-16 bg-tertiary/10 border border-tertiary/25 rounded-full flex items-center justify-center text-tertiary animate-bounce">
             <CheckCircle2 size={32} />
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="font-hanken text-2xl font-extrabold text-on-surface">Pedido Confirmado!</h2>
-            <p className="font-sans text-sm text-on-surface-variant">
+            <h2 className="font-hanken text-2xl font-extrabold text-foreground">Pedido Confirmado!</h2>
+            <p className="font-sans text-sm text-muted-foreground">
               Sua requisição foi registrada com sucesso.
             </p>
           </div>
-          <div className="bg-surface-container rounded-xl p-4 border border-white/5 w-full flex flex-col gap-2.5 text-left">
-            <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant">
+          <div className="bg-muted rounded-xl p-4 border border-border w-full flex flex-col gap-2.5 text-left">
+            <div className="flex justify-between items-center text-xs font-mono text-muted-foreground">
               <span>RASTREADOR:</span>
               <span className="text-primary font-bold">{trackerId}</span>
             </div>
-            <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant">
+            <div className="flex justify-between items-center text-xs font-mono text-muted-foreground">
               <span>ENTREGA:</span>
               <span className="text-tertiary font-bold">Frete Expresso Gratis</span>
             </div>
-            <div className="flex justify-between items-center text-xs font-mono text-on-surface-variant border-t border-white/5 pt-2">
+            <div className="flex justify-between items-center text-xs font-mono text-muted-foreground border-t border-border pt-2">
               <span>STATUS:</span>
               <span className="text-primary font-bold uppercase tracking-wider animate-pulse">Sendo Preparado</span>
             </div>
@@ -108,7 +108,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full bg-primary text-on-primary font-mono text-xs font-bold py-4 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all"
+            className="w-full bg-primary text-primary-foreground font-mono text-xs font-bold py-4 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all"
           >
             Retornar ao Catalogo
           </button>
@@ -119,23 +119,23 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end md:justify-center overflow-y-auto md:py-12"
+      className="fixed inset-0 z-50 bg-black/80 flex items-end md:justify-center overflow-y-auto md:py-12"
       onClick={(e) => { if (e.currentTarget === e.target) onClose(); }}
     >
-      <div className="glass-panel luxury-shadow rounded-t-2xl md:rounded-2xl w-full md:w-[32rem] border-t md:border border-primary/10 flex flex-col max-h-[90vh] animate-fade-in md:my-auto">
+      <div className="bg-card border border-border shadow-xl rounded-2xl rounded-t-2xl md:rounded-2xl w-full md:w-[32rem] border-t md:border flex flex-col max-h-[90vh] animate-fade-in md:my-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 md:p-6 border-b border-white/5">
+        <div className="flex items-center justify-between p-5 md:p-6 border-b border-border">
           <div className="flex items-center gap-3">
             {step === 'review' && (
               <button
                 type="button"
                 onClick={() => setStep('address')}
-                className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer"
+                className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
               >
                 <ChevronLeft size={20} />
               </button>
             )}
-            <h2 className="font-hanken text-lg md:text-xl font-bold text-on-surface flex items-center gap-2">
+            <h2 className="font-hanken text-lg md:text-xl font-bold text-foreground flex items-center gap-2">
               {step === 'address' ? <MapPin size={20} className="text-primary" /> : <Truck size={20} className="text-primary" />}
               {step === 'address' ? 'Endereço de Entrega' : 'Confirmar Pedido'}
             </h2>
@@ -143,7 +143,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
           <button
             type="button"
             onClick={onClose}
-            className="text-on-surface-variant hover:text-primary p-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+            className="text-muted-foreground hover:text-primary p-1.5 rounded-lg hover:bg-accent transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <X size={20} />
@@ -153,7 +153,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
         {/* Step indicator */}
         <div className="flex items-center gap-1 px-5 md:px-6 pt-3">
           <div className={`h-1 flex-1 rounded-full transition-colors ${step === 'address' ? 'bg-primary' : 'bg-primary'}`} />
-          <div className={`h-1 flex-1 rounded-full transition-colors ${step === 'review' ? 'bg-primary' : 'bg-white/10'}`} />
+          <div className={`h-1 flex-1 rounded-full transition-colors ${step === 'review' ? 'bg-primary' : 'bg-muted'}`} />
         </div>
 
         {/* Content */}
@@ -188,13 +188,13 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
         </div>
 
         {/* Footer action */}
-        <div className="p-5 md:p-6 border-t border-white/5">
+        <div className="p-5 md:p-6 border-t border-border">
           {step === 'address' && (
             <button
               type="button"
               disabled={!selectedAddressId}
               onClick={() => setStep('review')}
-              className="w-full bg-brand-violet text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-all duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="w-full bg-primary text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continuar
               <ChevronRight size={14} />
@@ -204,7 +204,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
             <button
               type="button"
               onClick={handleConfirmCheckout}
-              className="w-full bg-brand-violet text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(139,92,246,0.35)] transition-all duration-300 cursor-pointer"
+              className="w-full bg-primary text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
             >
               <Lock size={14} />
               Confirmar Pedido
@@ -234,7 +234,7 @@ function AddressStep({
   return (
     <div className="flex flex-col gap-4">
       {addresses.length === 0 && !showForm && (
-        <p className="text-sm text-on-surface-variant text-center py-4">
+        <p className="text-sm text-muted-foreground text-center py-4">
           Nenhum endereço cadastrado. Adicione um para continuar.
         </p>
       )}
@@ -249,19 +249,19 @@ function AddressStep({
             className={`text-left rounded-xl border p-4 transition-all cursor-pointer ${
               isSelected
                 ? 'border-primary bg-primary/5'
-                : 'border-white/5 bg-surface-container-low/50 hover:border-primary/30'
+                : 'border-border bg-card hover:border-primary/30'
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="font-sans text-sm font-semibold text-on-surface">{addr.label}</p>
-                <p className="font-sans text-xs text-on-surface-variant mt-1">
+                <p className="font-sans text-sm font-semibold text-foreground">{addr.label}</p>
+                <p className="font-sans text-xs text-muted-foreground mt-1">
                   {addr.street}, {addr.number}{addr.complement && ` - ${addr.complement}`}
                 </p>
-                <p className="font-sans text-xs text-on-surface-variant">
+                <p className="font-sans text-xs text-muted-foreground">
                   {addr.neighborhood} - {addr.city}/{addr.state}
                 </p>
-                <p className="font-sans text-xs text-on-surface-variant">CEP {addr.cep}</p>
+                <p className="font-sans text-xs text-muted-foreground">CEP {addr.cep}</p>
               </div>
               <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                 isSelected ? 'border-primary' : 'border-outline-variant'
@@ -341,9 +341,9 @@ function InlineAddressForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 animate-fade-in border border-white/5 rounded-xl p-4 bg-surface-container-low/30">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 animate-fade-in border border-border rounded-xl p-4 bg-card">
       {error && (
-        <div className="text-xs text-error bg-error-container/10 border border-error/20 rounded-lg px-3 py-2" role="alert">
+        <div className="text-xs text-destructive bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2" role="alert">
           {error}
         </div>
       )}
@@ -356,35 +356,35 @@ function InlineAddressForm({
           value={form.cep}
           onChange={(e) => setForm((p) => ({ ...p, cep: formatCep(e.target.value) }))}
           onBlur={handleCepBlur}
-          className="flex-1 bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50"
+          className="flex-1 bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50"
         />
         <button
           type="button"
           onClick={handleCepBlur}
           disabled={loadingCep || sanitizeCep(form.cep).length !== 8}
-          className="px-3 rounded-lg bg-surface-container-low border border-white/10 text-on-surface font-mono text-xs hover:bg-surface-container disabled:opacity-50 cursor-pointer"
+          className="px-3 rounded-lg bg-card border border-border text-foreground font-mono text-xs hover:bg-muted disabled:opacity-50 cursor-pointer"
         >
           {loadingCep ? '...' : 'Buscar'}
         </button>
       </div>
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-2">
-          <input id="checkout-street" type="text" placeholder="Rua" value={form.street} onChange={(e) => setForm((p) => ({ ...p, street: e.target.value }))} className="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+          <input id="checkout-street" type="text" placeholder="Rua" value={form.street} onChange={(e) => setForm((p) => ({ ...p, street: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
         </div>
-        <input id="checkout-number" type="text" placeholder="Numero" value={form.number} onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))} className="bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+        <input id="checkout-number" type="text" placeholder="Numero" value={form.number} onChange={(e) => setForm((p) => ({ ...p, number: e.target.value }))} className="bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
       </div>
-      <input id="checkout-complement" type="text" placeholder="Complemento (opcional)" value={form.complement} onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))} className="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
-      <input id="checkout-neighborhood" type="text" placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))} className="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+      <input id="checkout-complement" type="text" placeholder="Complemento (opcional)" value={form.complement} onChange={(e) => setForm((p) => ({ ...p, complement: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+      <input id="checkout-neighborhood" type="text" placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm((p) => ({ ...p, neighborhood: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
       <div className="grid grid-cols-2 gap-3">
-        <input id="checkout-city" type="text" placeholder="Cidade" value={form.city} onChange={(e) => setForm((p) => ({ ...p, city: e.target.value }))} className="bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
-        <input id="checkout-state" type="text" placeholder="UF" maxLength={2} value={form.state} onChange={(e) => setForm((p) => ({ ...p, state: e.target.value.toUpperCase() }))} className="bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+        <input id="checkout-city" type="text" placeholder="Cidade" value={form.city} onChange={(e) => setForm((p) => ({ ...p, city: e.target.value }))} className="bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+        <input id="checkout-state" type="text" placeholder="UF" maxLength={2} value={form.state} onChange={(e) => setForm((p) => ({ ...p, state: e.target.value.toUpperCase() }))} className="bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
       </div>
-      <input id="checkout-label" type="text" placeholder="Identificacao (Casa, trabalho...)" value={form.label} onChange={(e) => setForm((p) => ({ ...p, label: e.target.value }))} className="w-full bg-surface-container-low border border-white/10 rounded-lg px-3 py-2.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
+      <input id="checkout-label" type="text" placeholder="Identificacao (Casa, trabalho...)" value={form.label} onChange={(e) => setForm((p) => ({ ...p, label: e.target.value }))} className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50" />
       <div className="flex gap-3 pt-1">
-        <button type="button" onClick={onCancel} className="flex-1 bg-surface-container-low border border-white/10 text-on-surface font-mono text-xs py-3 rounded-xl hover:bg-surface-container transition-colors cursor-pointer">
+        <button type="button" onClick={onCancel} className="flex-1 bg-card border border-border text-foreground font-mono text-xs py-3 rounded-xl hover:bg-muted transition-colors cursor-pointer">
           Cancelar
         </button>
-        <button type="submit" className="flex-1 bg-brand-violet text-white py-3 rounded-xl font-mono text-xs font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all cursor-pointer">
+        <button type="submit" className="flex-1 bg-primary text-white py-3 rounded-xl font-mono text-xs font-medium tracking-wide transition-all cursor-pointer">
           Salvar
         </button>
       </div>
@@ -423,32 +423,32 @@ function ReviewStep({
     <div className="flex flex-col gap-5">
       {/* Address summary */}
       {selectedAddress && (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+        <div className="rounded-xl border border-border bg-primary/5 p-4">
           <div className="flex items-center gap-2 mb-2">
             <MapPin size={14} className="text-primary" />
             <span className="font-mono text-xs font-semibold text-primary uppercase tracking-wider">Entregar em</span>
           </div>
-          <p className="font-sans text-sm font-semibold text-on-surface">{selectedAddress.label}</p>
-          <p className="font-sans text-xs text-on-surface-variant mt-0.5">
+          <p className="font-sans text-sm font-semibold text-foreground">{selectedAddress.label}</p>
+          <p className="font-sans text-xs text-muted-foreground mt-0.5">
             {selectedAddress.street}, {selectedAddress.number}{selectedAddress.complement && ` - ${selectedAddress.complement}`}
           </p>
-          <p className="font-sans text-xs text-on-surface-variant">
+          <p className="font-sans text-xs text-muted-foreground">
             {selectedAddress.neighborhood} - {selectedAddress.city}/{selectedAddress.state}
           </p>
-          <p className="font-sans text-xs text-on-surface-variant">CEP {selectedAddress.cep}</p>
+          <p className="font-sans text-xs text-muted-foreground">CEP {selectedAddress.cep}</p>
         </div>
       )}
 
       {/* Items summary */}
       <div className="flex flex-col gap-3">
-        <h3 className="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-semibold">Itens</h3>
+        <h3 className="font-mono text-[11px] text-muted-foreground uppercase tracking-wider font-semibold">Itens</h3>
         {cart.map((item) => (
           <div key={item.product.id} className="flex items-center justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <p className="font-sans text-sm text-on-surface truncate">{item.product.name}</p>
-              <p className="font-mono text-[10px] text-on-surface-variant">Qtd: {item.quantity}</p>
+              <p className="font-sans text-sm text-foreground truncate">{item.product.name}</p>
+              <p className="font-mono text-[10px] text-muted-foreground">Qtd: {item.quantity}</p>
             </div>
-            <span className="font-mono text-sm text-on-surface shrink-0">
+            <span className="font-mono text-sm text-foreground shrink-0">
               R$ {(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </span>
           </div>
@@ -456,22 +456,22 @@ function ReviewStep({
       </div>
 
       {/* Totals */}
-      <div className="flex flex-col gap-2 pt-3 border-t border-white/5">
-        <div className="flex justify-between text-xs font-mono text-on-surface-variant">
+      <div className="flex flex-col gap-2 pt-3 border-t border-border">
+        <div className="flex justify-between text-xs font-mono text-muted-foreground">
           <span>Subtotal</span>
-          <span className="text-on-surface">R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          <span className="text-foreground">R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
-        <div className="flex justify-between text-xs font-mono text-on-surface-variant">
+        <div className="flex justify-between text-xs font-mono text-muted-foreground">
           <span>Desconto VIP (5%)</span>
           <span className="text-tertiary">-R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
-        <div className="flex justify-between text-xs font-mono text-on-surface-variant">
+        <div className="flex justify-between text-xs font-mono text-muted-foreground">
           <span>Frete</span>
           <span className="text-tertiary uppercase font-bold">Gratis</span>
         </div>
 
         {appliedCoupon && (
-          <div className="flex justify-between items-center text-xs bg-primary/10 border border-primary/25 rounded-lg p-2">
+          <div className="flex justify-between items-center text-xs bg-primary/10 border border-border rounded-lg p-2">
             <div className="flex items-center gap-1.5 text-primary font-semibold">
               <Tag size={13} />
               <span>{appliedCoupon.code} (-{appliedCoupon.discountPercentage}%)</span>
@@ -483,11 +483,11 @@ function ReviewStep({
           </div>
         )}
 
-        <div className="flex justify-between items-end pt-3 border-t border-white/10">
-          <span className="font-hanken text-lg font-bold text-on-surface">Total</span>
+        <div className="flex justify-between items-end pt-3 border-t border-border">
+          <span className="font-hanken text-lg font-bold text-foreground">Total</span>
           <div className="text-right">
-            <span className="block font-sans text-[10px] text-on-surface-variant uppercase tracking-wider">BRL</span>
-            <span className="font-mono text-xl text-primary font-extrabold text-glow-primary">R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+            <span className="block font-sans text-[10px] text-muted-foreground uppercase tracking-wider">BRL</span>
+            <span className="font-mono text-xl text-primary font-extrabold">R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
           </div>
         </div>
       </div>
@@ -495,25 +495,25 @@ function ReviewStep({
       {/* Coupon input (only if not applied) */}
       {!appliedCoupon && (
         <div>
-          <label htmlFor="checkout-coupon" className="block font-mono text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold mb-1.5">Cupom de Desconto</label>
+          <label htmlFor="checkout-coupon" className="block font-mono text-[11px] text-muted-foreground tracking-wider uppercase font-semibold mb-1.5">Cupom de Desconto</label>
           <div className="flex gap-2">
             <input
               id="checkout-coupon"
               type="text"
               placeholder="Insira o codigo"
-              className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2 text-on-surface font-sans text-xs focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-on-surface-variant/40"
+              className="w-full bg-card border border-outline-variant rounded-lg px-3 py-2 text-foreground font-sans text-xs focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-muted-foreground/40"
               value={couponInput}
               onChange={(e) => onCouponInputChange(e.target.value)}
             />
             <button
               type="button"
               onClick={onApplyCoupon}
-              className="bg-surface-container-high hover:bg-surface-bright text-on-surface font-mono text-xs px-4 py-2 rounded-lg border border-outline-variant transition-colors cursor-pointer shrink-0"
+              className="bg-accent hover:bg-accent/80 text-foreground font-mono text-xs px-4 py-2 rounded-lg border border-outline-variant transition-colors cursor-pointer shrink-0"
             >
               Aplicar
             </button>
           </div>
-          {couponError && <p className="text-error text-xs mt-1 font-mono">{couponError}</p>}
+          {couponError && <p className="text-destructive text-xs mt-1 font-mono">{couponError}</p>}
         </div>
       )}
 
@@ -523,7 +523,7 @@ function ReviewStep({
         </p>
       )}
 
-      <div className="flex items-center gap-1.5 text-on-surface-variant font-mono text-[10px] opacity-75 select-none uppercase">
+      <div className="flex items-center gap-1.5 text-muted-foreground font-mono text-[10px] opacity-75 select-none uppercase">
         <Lock size={12} className="text-primary" />
         Pagamento 100% seguro e criptografado
       </div>

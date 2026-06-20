@@ -98,16 +98,16 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 pt-16 md:pt-20">
-      <div className="glass-panel luxury-shadow rounded-2xl p-6 md:p-8 w-full max-w-md border border-primary/10 animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-start justify-center p-4 pt-16 md:pt-20">
+      <div className="bg-card border border-border shadow-xl rounded-2xl p-6 md:p-8 w-full max-w-md animate-fade-in">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-hanken text-xl font-bold text-on-surface">
+          <h2 className="font-hanken text-xl font-bold text-foreground">
             Editar Perfil
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="text-on-surface-variant hover:text-primary p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+            className="text-muted-foreground hover:text-primary p-1 rounded-lg hover:bg-accent transition-colors cursor-pointer"
             aria-label="Fechar"
           >
             <X size={20} />
@@ -115,7 +115,7 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
         </div>
 
         {error && (
-          <div className="text-sm text-error bg-error-container/10 border border-error/20 rounded-xl px-4 py-3 mb-4" role="alert">
+          <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-xl px-4 py-3 mb-4" role="alert">
             {error}
           </div>
         )}
@@ -128,7 +128,7 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
         <form onSubmit={handleSave} className="flex flex-col gap-5">
           <div className="flex flex-col items-center gap-3">
             <div
-              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-brand-violet to-primary-container flex items-center justify-center overflow-hidden cursor-pointer relative group"
+              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center overflow-hidden cursor-pointer relative group"
               onClick={() => fileInputRef.current?.click()}
             >
               {avatarPreview ? (
@@ -150,7 +150,7 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="font-sans text-xs text-primary hover:text-brand-violet transition-colors cursor-pointer"
+              className="font-sans text-xs text-primary hover:text-primary transition-colors cursor-pointer"
             >
               Alterar foto
             </button>
@@ -159,7 +159,7 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="edit-profile-name"
-              className="font-mono text-xs text-on-surface-variant uppercase tracking-wider"
+              className="font-mono text-xs text-muted-foreground uppercase tracking-wider"
             >
               Nome
             </label>
@@ -168,7 +168,7 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-surface-container-low border border-white/10 rounded-xl px-4 py-3.5 text-on-surface font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all"
+              className="w-full bg-card border border-border rounded-xl px-4 py-3.5 text-foreground font-sans text-sm focus:outline-none focus:ring-1 focus:border-primary/50 focus:ring-primary/25 transition-all"
               placeholder="Seu nome"
             />
           </div>
@@ -177,14 +177,14 @@ export default function ProfileEditView({ onClose, onSaved }: ProfileEditViewPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-surface-container-low border border-white/10 text-on-surface font-mono text-xs py-3.5 rounded-xl hover:bg-surface-container transition-colors cursor-pointer"
+              className="flex-1 bg-muted border border-border text-foreground font-mono text-xs py-3.5 rounded-xl hover:bg-accent transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-brand-violet text-white py-3.5 rounded-xl font-mono text-xs font-medium tracking-wide hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="flex-1 bg-primary text-primary-foreground py-3.5 rounded-xl font-mono text-xs font-medium tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? 'Salvando...' : 'Salvar'}
             </button>

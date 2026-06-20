@@ -4,10 +4,10 @@ import { routes } from '@/src/lib/routes';
 export default function ProductNotFound() {
   return (
     <div className="w-full max-w-xl mx-auto px-6 py-24 text-center flex flex-col items-center gap-6">
-      <h1 className="font-hanken text-3xl font-extrabold text-on-surface">
+      <h1 className="font-hanken text-3xl font-extrabold text-foreground">
         Produto não encontrado
       </h1>
-      <p className="font-sans text-sm text-on-surface-variant">
+      <p className="font-sans text-sm text-muted-foreground">
         O item que você procura não existe ou foi removido do catálogo.
       </p>
       <Link

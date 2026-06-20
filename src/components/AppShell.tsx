@@ -17,14 +17,14 @@ function GlobalToast() {
 
   return (
     <div
-      className="fixed bottom-20 md:bottom-6 right-6 z-50 bg-surface-container-high border border-primary/25 rounded-xl p-4 flex items-center gap-3 shadow-2xl animate-bounce-short cursor-pointer max-w-sm"
+      className="fixed bottom-20 md:bottom-6 right-6 z-50 bg-card border border-primary/25 rounded-xl p-4 flex items-center gap-3 shadow-xl animate-bounce-short cursor-pointer max-w-sm"
       onClick={dismissToast}
       id="global-toast-msg"
     >
       <div className="bg-primary/10 p-2 rounded-full text-primary shrink-0">
         <Check size={16} />
       </div>
-      <span className="font-sans text-xs tracking-wide text-on-surface font-semibold">
+      <span className="font-sans text-xs tracking-wide text-foreground font-semibold">
         {toastMessage}
       </span>
     </div>
@@ -40,7 +40,7 @@ function ShellContent({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <div className="bg-background text-on-background min-h-screen flex flex-col font-sans transition-all selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+    <div className="bg-background text-foreground min-h-screen flex flex-col font-sans transition-all selection:bg-primary selection:text-primary-foreground overflow-x-hidden">
       <GlobalToast />
       {!authPage && <Header />}
       <main className="flex-grow flex flex-col pb-16 md:pb-0">{children}</main>

@@ -43,7 +43,7 @@ export default function SocialAuthButtons({
       <button
         type="button"
         onClick={() => onProviderClick?.('google')}
-        className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl bg-surface-container-high border border-white/10 text-on-surface font-sans text-sm font-medium hover:border-primary/30 hover:bg-surface-container transition-all duration-200 cursor-pointer active:scale-[0.98]"
+        className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl bg-accent border border-border text-foreground font-sans text-sm font-medium hover:border-primary/30 hover:bg-accent/80 transition-all duration-200 cursor-pointer active:scale-[0.98]"
         id="auth-google-btn"
       >
         <GoogleIcon />

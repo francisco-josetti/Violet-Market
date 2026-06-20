@@ -6,7 +6,7 @@ export default function FormFieldError({ message }: FormFieldErrorProps) {
   if (!message) return null;
 
   return (
-    <p className="text-xs text-error font-sans mt-1.5" role="alert">
+    <p className="text-xs text-destructive font-sans mt-1.5" role="alert">
       {message}
     </p>
   );
