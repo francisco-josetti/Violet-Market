@@ -103,7 +103,7 @@ function ProfileMenuItem({
 
 export default function ProfileView() {
   const router = useRouter();
-  const { isLoggedIn, user, signOut } = useAuth();
+  const { isLoggedIn, user, signOut, refreshUser } = useAuth();
   const { cart } = useCart();
   const [showEdit, setShowEdit] = useState(false);
   const [showAddresses, setShowAddresses] = useState(false);
@@ -160,12 +160,12 @@ export default function ProfileView() {
             Meu Perfil
           </h1>
           <p className="font-sans text-sm text-muted-foreground max-w-md">
-            Entre na sua conta para acessar pedidos, preferências e benefícios VIP.
+            Entre na sua conta para acessar pedidos, preferências e benefícios de membro.
           </p>
         </div>
         <Link
           href={routes.login}
-          className="bg-primary text-primary-foreground px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
+          className="border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
           id="profile-login-btn"
         >
           <LogIn size={16} />
@@ -211,7 +211,7 @@ export default function ProfileView() {
           </div>
           <span className="absolute -bottom-2 -right-2 bg-tertiary text-on-tertiary text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-tertiary-container uppercase tracking-wider flex items-center gap-1">
             <Sparkles size={10} />
-            VIP
+            Membro
           </span>
         </div>
 
@@ -260,15 +260,18 @@ export default function ProfileView() {
             {cartCount === 1 ? 'item ativo' : 'itens ativos'}
           </span>
         </div>
-        <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+        <Link
+          href={routes.plans}
+          className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1 hover:border-primary/30 transition-all cursor-pointer"
+        >
           <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-            Desconto VIP
+            Desconto Membro
           </span>
           <span className="font-hanken text-2xl font-bold text-tertiary">5%</span>
           <span className="font-sans text-xs text-muted-foreground">
             em todas as compras
           </span>
-        </div>
+        </Link>
         <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
           <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
             Pedidos
@@ -335,7 +338,7 @@ export default function ProfileView() {
       <button
         type="button"
         onClick={handleLogout}
-        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-destructive/30 bg-destructive/10 text-destructive font-mono text-sm font-medium hover:bg-destructive/20 transition-all duration-200 cursor-pointer"
+        className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border border-border bg-muted text-muted-foreground font-mono text-sm font-medium hover:bg-accent hover:text-foreground transition-all duration-200 cursor-pointer"
         id="profile-logout-btn"
       >
         <LogOut size={16} />
@@ -345,7 +348,7 @@ export default function ProfileView() {
       {showEdit && (
         <ProfileEditView
           onClose={() => setShowEdit(false)}
-          onSaved={() => window.location.reload()}
+          onSaved={() => refreshUser()}
         />
       )}
 

@@ -16,6 +16,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   isLoggedIn: boolean | null;
   signOut: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -72,8 +73,29 @@ export function AuthProvider({
     setIsLoggedIn(false);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const supabase = createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('name, avatar_url')
+      .eq('id', session.user.id)
+      .single();
+
+    setUser({
+      id: session.user.id,
+      email: session.user.email ?? '',
+      name: profile?.name ?? null,
+      avatarUrl: profile?.avatar_url ?? null,
+      provider: session.user.app_metadata?.provider ?? 'email',
+      loggedAt: session.user.created_at ?? new Date().toISOString(),
+    });
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, signOut }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, signOut, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

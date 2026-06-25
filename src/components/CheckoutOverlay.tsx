@@ -69,7 +69,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
   };
 
   const handleConfirmCheckout = () => {
-    const id = `VIP-${Math.floor(100000 + Math.random() * 900000)}-XM`;
+    const id = `VM-${Math.floor(100000 + Math.random() * 900000)}-XM`;
     setTrackerId(id);
     setCheckoutComplete(true);
     clearCart();
@@ -194,7 +194,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
               type="button"
               disabled={!selectedAddressId}
               onClick={() => setStep('review')}
-              className="w-full bg-primary text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Continuar
               <ChevronRight size={14} />
@@ -204,7 +204,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
             <button
               type="button"
               onClick={handleConfirmCheckout}
-              className="w-full bg-primary text-white font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
             >
               <Lock size={14} />
               Confirmar Pedido
@@ -384,7 +384,7 @@ function InlineAddressForm({
         <button type="button" onClick={onCancel} className="flex-1 bg-card border border-border text-foreground font-mono text-xs py-3 rounded-xl hover:bg-muted transition-colors cursor-pointer">
           Cancelar
         </button>
-        <button type="submit" className="flex-1 bg-primary text-white py-3 rounded-xl font-mono text-xs font-medium tracking-wide transition-all cursor-pointer">
+        <button type="submit" className="flex-1 border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground py-3 rounded-xl font-mono text-xs font-medium tracking-wide transition-all cursor-pointer">
           Salvar
         </button>
       </div>
@@ -462,7 +462,7 @@ function ReviewStep({
           <span className="text-foreground">R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
         <div className="flex justify-between text-xs font-mono text-muted-foreground">
-          <span>Desconto VIP (5%)</span>
+          <span>Desconto Membro (5%)</span>
           <span className="text-tertiary">-R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
         <div className="flex justify-between text-xs font-mono text-muted-foreground">
@@ -478,7 +478,7 @@ function ReviewStep({
             </div>
             <div className="flex items-center gap-2">
               <span className="font-mono text-primary font-bold">-R$ {couponDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-              <button type="button" onClick={onRemoveCoupon} className="text-primary hover:text-white cursor-pointer"><X size={14} /></button>
+              <button type="button" onClick={onRemoveCoupon} className="text-primary hover:text-foreground cursor-pointer"><X size={14} /></button>
             </div>
           </div>
         )}

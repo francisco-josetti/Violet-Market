@@ -85,7 +85,7 @@ function Step2Media({ defaultValues, onStepComplete, onBack }: StepProps) {
         )}
         <button
           type="submit"
-          className="flex-1 bg-primary hover:bg-primary/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer text-center"
+          className="flex-1 border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer text-center"
         >
           Avançar para Detalhes
         </button>

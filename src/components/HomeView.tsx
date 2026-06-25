@@ -70,7 +70,7 @@ export default function HomeView() {
           <div className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto">
             <Link
               href={routes.catalog}
-              className="bg-primary text-white px-8 py-4 rounded-xl font-mono text-sm tracking-wide font-medium transition-all duration-300 hover:bg-primary/90 hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
+              className="border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 px-8 py-4 rounded-xl font-mono text-sm tracking-wide font-medium transition-all duration-300 hover:-translate-y-0.5 cursor-pointer flex items-center justify-center gap-2"
               id="hero-explore-cta"
             >
               <ShoppingBag size={16} />
@@ -151,7 +151,7 @@ export default function HomeView() {
                       e.stopPropagation();
                       addToCart(product);
                     }}
-                    className="w-8 h-8 rounded-full bg-accent hover:bg-primary hover:text-white flex items-center justify-center text-muted-foreground transition-all hover:scale-110 active:scale-95 cursor-pointer"
+                    className="w-8 h-8 rounded-full bg-accent hover:bg-primary hover:text-primary-foreground flex items-center justify-center text-muted-foreground transition-all hover:scale-110 active:scale-95 cursor-pointer"
                     title="Adicionar ao Carrinho"
                     id={`add-btn-${product.id}`}
                     type="button"

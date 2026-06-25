@@ -12,7 +12,7 @@ export default function ProductNotFound() {
       </p>
       <Link
         href={routes.catalog}
-        className="bg-primary text-on-primary font-mono text-xs font-bold px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all"
+        className="border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground font-mono text-xs font-bold px-8 py-4 rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all"
       >
         Voltar ao catálogo
       </Link>

@@ -180,7 +180,7 @@ export default function CatalogView() {
           />
           {filters.searchQuery && (
             <button onClick={() => setFilters(prev => ({ ...prev, searchQuery: '' }))}>
-              <X size={14} className="text-muted-foreground hover:text-white" />
+              <X size={14} className="text-muted-foreground hover:text-foreground" />
             </button>
           )}
         </div>
@@ -322,7 +322,7 @@ export default function CatalogView() {
                 {cat}
                 <X
                   size={12}
-                  className="cursor-pointer hover:text-white transition-colors"
+                  className="cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => handleRemoveCategoryChip(cat)}
                 />
               </div>
@@ -332,7 +332,7 @@ export default function CatalogView() {
                 ★ {filters.minRating}+ Estrelas
                 <X
                   size={12}
-                  className="cursor-pointer hover:text-white transition-colors"
+                  className="cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => setFilters(prev => ({ ...prev, minRating: 0 }))}
                 />
               </div>
@@ -342,7 +342,7 @@ export default function CatalogView() {
                 Até R$ {filters.priceMax}
                 <X
                   size={12}
-                  className="cursor-pointer hover:text-white transition-colors"
+                  className="cursor-pointer hover:text-foreground transition-colors"
                   onClick={() => setFilters(prev => ({ ...prev, priceMax: 15000 }))}
                 />
               </div>
@@ -440,7 +440,7 @@ export default function CatalogView() {
                       e.stopPropagation();
                       addToCart(product);
                     }}
-                    className="w-full mt-4 bg-primary text-on-primary py-3 rounded-lg font-mono text-xs font-semibold hover:bg-primary/90 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full mt-4 border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 py-3 rounded-lg font-mono text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <ShoppingCart size={15} />
                     Adicionar ao Carrinho

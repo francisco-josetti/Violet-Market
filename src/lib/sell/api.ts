@@ -39,28 +39,37 @@ export async function uploadPhoto(
   const sanitized = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
   const ext = file.name.split('.').pop() || 'jpg';
   const path = `${session.user.id}/${timestamp}_${sanitized}`;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-  let progress = 0;
-  const progressInterval = setInterval(() => {
-    progress = Math.min(progress + 15, 90);
-    onProgress?.(progress);
-  }, 200);
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
 
-  const { data: uploadData, error } = await supabase.storage
-    .from('product-images')
-    .upload(path, file, { contentType: file.type, upsert: false });
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable && onProgress) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    });
 
-  clearInterval(progressInterval);
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(100);
+        const { data: { publicUrl } } = supabase.storage
+          .from('product-images')
+          .getPublicUrl(path);
+        resolve(publicUrl);
+      } else {
+        reject(new Error('Erro ao fazer upload da imagem'));
+      }
+    });
 
-  if (error) {
-    throw new Error('Erro ao fazer upload da imagem: ' + error.message);
-  }
+    xhr.addEventListener('error', () => {
+      reject(new Error('Erro ao fazer upload da imagem'));
+    });
 
-  onProgress?.(100);
-
-  const { data: { publicUrl } } = supabase.storage
-    .from('product-images')
-    .getPublicUrl(uploadData.path);
-
-  return publicUrl;
+    xhr.open('POST', `${supabaseUrl}/storage/v1/object/product-images/${path}`);
+    xhr.setRequestHeader('Authorization', `Bearer ${session.access_token}`);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.setRequestHeader('x-upsert', 'false');
+    xhr.send(file);
+  });
 }

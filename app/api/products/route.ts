@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/src/lib/supabase/server';
+import { sellFormSchema } from '@/src/lib/sell/schemas';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -16,39 +17,45 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 });
   }
 
-  const {
-    title, description, price, stock, condition, images,
-    categoryId, subcategory, shippingType, sku, variants,
-    weightKg, cep,
-  } = body;
+  const parsed = sellFormSchema.safeParse(body);
 
-  if (!title || !description || price == null || !stock || !condition || !images || !shippingType) {
+  if (!parsed.success) {
+    const fieldErrors = parsed.error.issues.map((issue) => ({
+      field: issue.path.join('.'),
+      message: issue.message,
+    }));
     return NextResponse.json(
-      { error: 'Campos obrigatórios faltando' },
+      { error: 'Dados inválidos', fields: fieldErrors },
       { status: 400 },
     );
   }
 
-  const priceInCents = Math.round(Number(price) * 100);
+  const {
+    title, description, price, stock, condition, images,
+    categoryId, subcategory, shippingType, sku, variants,
+    weightKg, cep,
+  } = parsed.data;
+
+  const priceInCents = Math.round(price * 100);
 
   const insertData: Record<string, unknown> = {
     seller_id: user.id,
-    title: String(title),
-    description: String(description),
+    title,
+    description,
     price: priceInCents,
-    stock: Number(stock),
-    condition: String(condition),
+    stock,
+    condition,
     images,
-    shipping_type: String(shippingType),
+    shipping_type: shippingType,
   };
 
-  if (sku) insertData.sku = String(sku);
-  if (categoryId) insertData.category_id = String(categoryId);
-  if (subcategory) insertData.subcategory = String(subcategory);
-  if (Array.isArray(variants) && variants.length > 0) insertData.variants = variants;
+  if (sku) insertData.sku = sku;
+  if (categoryId) insertData.category_id = categoryId;
+  if (subcategory) insertData.subcategory = subcategory;
+  if (variants && variants.length > 0) insertData.variants = variants;
   if (shippingType === 'calculate') {
-    insertData.weight_kg = weightKg ? Number(weightKg) : null;
-    insertData.cep = cep ? String(cep) : null;
+    insertData.weight_kg = weightKg ?? null;
+    insertData.cep = cep ?? null;
   }
 
   const { data: product, error } = await supabase

@@ -45,7 +45,7 @@ if (isLoggedIn === false) {
         </div>
         <Link
           href={routes.login}
-          className="bg-primary text-white px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
+          className="border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 px-8 py-4 rounded-xl font-mono text-sm font-medium tracking-wide transition-all duration-300 flex items-center justify-center gap-2"
           id="cart-login-btn"
         >
           <LogIn size={16} />
@@ -208,7 +208,7 @@ if (isLoggedIn === false) {
                 </span>
               </div>
               <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">
-                <span>Desconto (Membro VIP 5%)</span>
+                <span>Desconto (Membro Violet 5%)</span>
                 <span className="font-mono font-semibold text-tertiary">
                   - R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
@@ -235,7 +235,7 @@ if (isLoggedIn === false) {
 
             <button
               onClick={() => setShowCheckout(true)}
-              className="w-full bg-primary hover:bg-primary-container text-white py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer scale-100 active:scale-[0.98]"
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 py-4 rounded-xl font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer scale-100 active:scale-[0.98]"
               id="checkout-action-btn"
             >
               Proceder para o Checkout

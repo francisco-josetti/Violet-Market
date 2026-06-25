@@ -25,7 +25,7 @@ function SuccessContent() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h1 className="font-hanken text-2xl md:text-3xl font-extrabold text-white">
+        <h1 className="font-hanken text-2xl md:text-3xl font-extrabold text-foreground">
           Anúncio Publicado!
         </h1>
         {product ? (
@@ -65,7 +65,7 @@ function SuccessContent() {
         </Link>
         <Link
           href="/sell"
-          className="flex-1 bg-primary hover:bg-primary/90 text-white font-mono text-xs font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
+          className="flex-1 border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
         >
           <PlusCircle size={14} />
           Novo Anúncio

@@ -6,6 +6,7 @@ export const routes = {
   register: '/cadastro',
   resetPassword: '/reset-password',
   profile: '/perfil',
+  plans: '/planos',
   product: (id: string) => `/produto/${id}`,
   sell: '/sell',
   sellSuccess: '/sell/success',

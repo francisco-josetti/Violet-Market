@@ -229,7 +229,7 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Direct purchase */}
             <button
               onClick={handleBuyNow}
-              className="w-full bg-primary hover:bg-primary/90 text-white font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-98"
               id="buy-now-cta"
             >
               <ShoppingBag size={15} />
@@ -239,7 +239,7 @@ export default function DetailView({ product }: DetailViewProps) {
             {/* Standard Cart add */}
             <button
               onClick={() => addToCart(product)}
-              className="w-full border border-primary hover:bg-primary/5 text-primary font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:hover:bg-primary dark:hover:text-primary-foreground font-mono text-xs font-bold uppercase tracking-wider h-14 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
               id="add-to-cart-detail-cta"
             >
               Adicionar ao Carrinho
@@ -251,7 +251,7 @@ export default function DetailView({ product }: DetailViewProps) {
               className={`w-full border py-3 rounded-lg text-xs font-mono tracking-wide hover:bg-accent transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
                 isWished
                   ? 'border-tertiary text-tertiary bg-tertiary/5'
-                  : 'border-border text-muted-foreground hover:text-white'
+                  : 'border-border text-muted-foreground hover:text-foreground'
               }`}
             >
               <Heart size={14} fill={isWished ? '#4edea3' : 'transparent'} />

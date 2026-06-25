@@ -91,7 +91,7 @@ function SellWizard() {
             <button
               type="button"
               onClick={handleResumeDraft}
-              className="px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-xl font-mono text-xs font-bold transition-all cursor-pointer"
+              className="px-4 py-2 border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer"
             >
               Continuar Anúncio
             </button>

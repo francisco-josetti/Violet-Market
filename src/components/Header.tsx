@@ -3,11 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingCart, Bell, User } from 'lucide-react';
+import { ShoppingCart, Bell, User, Sun, Moon } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
 import { useScrollDirection } from '../hooks/useScrollDirection';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function Header() {
   const { cart } = useCart();
@@ -15,6 +16,7 @@ export default function Header() {
   const { isScrolled } = useScrollDirection(pathname);
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const isLoggedIn = useIsLoggedIn();
+  const { theme, toggleTheme } = useTheme();
   const isCatalogActive =
     pathname === routes.catalog || pathname.startsWith('/produto');
   const isProfileActive = pathname === routes.profile;
@@ -55,6 +57,17 @@ export default function Header() {
           >
             Vender
           </Link>
+          <Link
+            href={routes.plans}
+            className={`font-sans text-sm tracking-wide transition-all duration-200 cursor-pointer rounded-lg px-3 py-2 hover:text-primary ${
+              pathname === routes.plans
+                ? 'text-primary font-semibold border-b-2 border-primary rounded-none px-1 py-1'
+                : 'text-muted-foreground hover:bg-accent'
+            }`}
+            id="nav-plans"
+          >
+            Planos
+          </Link>
           {isLoggedIn === true && (
             <Link
               href={routes.profile}
@@ -71,6 +84,16 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-3 text-primary">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2 rounded-full hover:bg-accent transition-all duration-200 cursor-pointer flex items-center justify-center text-muted-foreground hover:text-primary"
+            aria-label={theme === 'dark' ? 'Alternar para modo claro' : 'Alternar para modo escuro'}
+            id="header-theme-btn"
+          >
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
           <Link
             href={routes.cart}
             className="p-2 rounded-full hover:bg-accent transition-all duration-200 relative cursor-pointer flex items-center justify-center text-muted-foreground hover:text-primary"

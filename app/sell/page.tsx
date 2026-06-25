@@ -44,7 +44,7 @@ function SellPage() {
   return (
     <article className="flex-grow py-8 px-4 md:py-12 bg-background min-h-[80vh]">
       <header className="max-w-3xl mx-auto mb-8 text-center flex flex-col gap-2">
-        <h1 className="font-hanken text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+        <h1 className="font-hanken text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
           Anunciar Produto
         </h1>
         <p className="font-sans text-sm md:text-base text-muted-foreground/80">

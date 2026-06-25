@@ -201,7 +201,7 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
                 key={cond.id}
                 className={`flex flex-col p-3 rounded-xl border text-left cursor-pointer transition-all duration-300 ${
                   isSelected
-                    ? 'border-primary bg-primary/10 text-white'
+                    ? 'border-primary bg-primary/10 text-primary'
                     : 'border-border bg-card text-muted-foreground hover:border-primary/20'
                 }`}
               >
@@ -263,7 +263,7 @@ function Step1Info({ defaultValues, onStepComplete }: StepProps) {
 
       <button
         type="submit"
-        className="w-full bg-primary hover:bg-primary/90 text-white font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer mt-4"
+        className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-sm font-semibold py-3.5 rounded-xl transition-all cursor-pointer mt-4"
       >
         Avançar para Mídia
       </button>
