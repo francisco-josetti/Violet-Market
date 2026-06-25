@@ -8,6 +8,7 @@ import Footer from './Footer';
 import MobileBottomNav from './MobileBottomNav';
 import { CartProvider, useCart } from '../contexts/CartContext';
 import { OverlayProvider, useOverlay } from '../contexts/OverlayContext';
+import { WishlistProvider } from '../contexts/WishlistContext';
 import { isAuthRoute } from '../lib/routes';
 
 function GlobalToast() {
@@ -57,9 +58,11 @@ function ShellContent({ children }: { children: React.ReactNode }) {
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
+      <WishlistProvider>
       <OverlayProvider>
       <ShellContent>{children}</ShellContent>
     </OverlayProvider>
+      </WishlistProvider>
     </CartProvider>
   );
 }

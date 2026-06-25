@@ -7,22 +7,26 @@ import { ArrowLeft, X, Plus, Minus, Truck, Lock, ArrowRight, Tag, Sparkles, Chec
 import { useCart } from '../contexts/CartContext';
 import { routes } from '../lib/routes';
 import { useIsLoggedIn } from '../hooks/useIsLoggedIn';
+import { useAuth } from '../contexts/AuthContext';
+import { getPlanDiscount, getPlanLabel } from '../lib/plans';
 import CheckoutOverlay from './CheckoutOverlay';
 
 export default function CartView() {
   const router = useRouter();
   const isLoggedIn = useIsLoggedIn();
+  const { user } = useAuth();
   const { cart, updateQuantity, removeItem } = useCart();
   const [showCheckout, setShowCheckout] = useState(false);
 
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const discountRate = getPlanDiscount(user?.plan);
 
   const subtotal = useMemo(() => {
     return cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   }, [cart]);
 
-  const vipDiscount = subtotal * 0.05;
-  const total = Math.max(0, subtotal - vipDiscount);
+  const memberDiscount = subtotal * discountRate;
+  const total = Math.max(0, subtotal - memberDiscount);
 
   if (isLoggedIn === null) {
     return null;
@@ -208,9 +212,9 @@ if (isLoggedIn === false) {
                 </span>
               </div>
               <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">
-                <span>Desconto (Membro Violet 5%)</span>
+                <span>Desconto ({getPlanLabel(user?.plan)} {Math.round(discountRate * 100)}%)</span>
                 <span className="font-mono font-semibold text-tertiary">
-                  - R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  - R$ {memberDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </span>
               </div>
               <div className="flex justify-between items-center text-muted-foreground font-sans text-xs sm:text-sm">

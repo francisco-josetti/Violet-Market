@@ -9,6 +9,7 @@ export interface AuthUser {
   name: string | null;
   avatarUrl: string | null;
   provider: string;
+  plan: string | null;
   loggedAt: string;
 }
 
@@ -41,7 +42,7 @@ export function AuthProvider({
       if (session?.user) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('name, avatar_url')
+          .select('name, avatar_url, plan')
           .eq('id', session.user.id)
           .single();
 
@@ -50,6 +51,7 @@ export function AuthProvider({
           email: session.user.email ?? '',
           name: profile?.name ?? null,
           avatarUrl: profile?.avatar_url ?? null,
+          plan: profile?.plan ?? null,
           provider: session.user.app_metadata?.provider ?? 'email',
           loggedAt: session.user.created_at ?? new Date().toISOString(),
         });
@@ -80,7 +82,7 @@ export function AuthProvider({
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('name, avatar_url')
+      .select('name, avatar_url, plan')
       .eq('id', session.user.id)
       .single();
 
@@ -89,6 +91,7 @@ export function AuthProvider({
       email: session.user.email ?? '',
       name: profile?.name ?? null,
       avatarUrl: profile?.avatar_url ?? null,
+      plan: profile?.plan ?? null,
       provider: session.user.app_metadata?.provider ?? 'email',
       loggedAt: session.user.created_at ?? new Date().toISOString(),
     });

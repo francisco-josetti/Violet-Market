@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import DetailView from '@/src/components/DetailView';
-import { PRODUCTS } from '@/src/data';
+import { getProductById } from '@/src/lib/products';
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -8,7 +8,7 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = PRODUCTS.find((p) => p.id === id);
+  const product = await getProductById(id);
 
   if (!product) {
     notFound();

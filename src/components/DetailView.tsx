@@ -8,6 +8,7 @@ import { ProductPrereq } from '../types';
 import { PRODUCTS } from '../data';
 import { getProducts } from '../lib/products';
 import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
 import { routes } from '../lib/routes';
 
 interface DetailViewProps {
@@ -17,6 +18,7 @@ interface DetailViewProps {
 export default function DetailView({ product }: DetailViewProps) {
   const router = useRouter();
   const { addToCart } = useCart();
+  const { isWished, toggleWishlist } = useWishlist();
   const [allProducts, setAllProducts] = useState<ProductPrereq[]>(PRODUCTS);
 
   useEffect(() => {
@@ -38,7 +40,6 @@ export default function DetailView({ product }: DetailViewProps) {
 
   const [activeImage, setActiveImage] = useState(defaultGallery[0]);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isWished, setIsWished] = useState(false);
 
   const relatedProducts = allProducts.filter(p => p.id !== product.id).slice(0, 4);
 
@@ -49,10 +50,6 @@ export default function DetailView({ product }: DetailViewProps) {
 
   const handleVideoThumbClick = () => {
     setIsVideoPlaying(true);
-  };
-
-  const handleToggleWishlist = () => {
-    setIsWished(!isWished);
   };
 
   return (
@@ -247,15 +244,15 @@ export default function DetailView({ product }: DetailViewProps) {
 
             {/* Add to Wishlist toggle */}
             <button
-              onClick={handleToggleWishlist}
+              onClick={() => toggleWishlist(product.id)}
               className={`w-full border py-3 rounded-lg text-xs font-mono tracking-wide hover:bg-accent transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 ${
-                isWished
+                isWished(product.id)
                   ? 'border-tertiary text-tertiary bg-tertiary/5'
                   : 'border-border text-muted-foreground hover:text-foreground'
               }`}
             >
-              <Heart size={14} fill={isWished ? '#4edea3' : 'transparent'} />
-              {isWished ? 'Adicionado aos Desejos!' : 'Adicionar aos Desejos'}
+              <Heart size={14} fill={isWished(product.id) ? '#4edea3' : 'transparent'} />
+              {isWished(product.id) ? 'Adicionado aos Desejos!' : 'Adicionar aos Desejos'}
             </button>
           </div>
 

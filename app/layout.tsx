@@ -27,7 +27,7 @@ export default async function RootLayout({
   if (user) {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('name, avatar_url')
+      .select('name, avatar_url, plan')
       .eq('id', user.id)
       .single();
 
@@ -36,6 +36,7 @@ export default async function RootLayout({
       email: user.email ?? '',
       name: profile?.name ?? null,
       avatarUrl: profile?.avatar_url ?? null,
+      plan: profile?.plan ?? null,
       provider: user.app_metadata?.provider ?? 'email',
       loggedAt: user.created_at ?? new Date().toISOString(),
     };
@@ -49,10 +50,10 @@ export default async function RootLayout({
             __html: `
               (function() {
                 var theme = localStorage.getItem('theme');
-                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
-                } else {
+                if (theme === 'light') {
                   document.documentElement.classList.remove('dark');
+                } else {
+                  document.documentElement.classList.add('dark');
                 }
               })();
             `,

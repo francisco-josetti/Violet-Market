@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -22,6 +22,8 @@ import {
 import { routes } from '../lib/routes';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import { getPlanDiscount, getPlanLabel } from '../lib/plans';
+import { createClient } from '../lib/supabase/client';
 import ProfileEditView from './ProfileEditView';
 import AddressView from './AddressView';
 
@@ -107,8 +109,21 @@ export default function ProfileView() {
   const { cart } = useCart();
   const [showEdit, setShowEdit] = useState(false);
   const [showAddresses, setShowAddresses] = useState(false);
+  const [orderCount, setOrderCount] = useState(0);
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const discountRate = getPlanDiscount(user?.plan);
+  const planLabel = getPlanLabel(user?.plan);
+
+  useEffect(() => {
+    if (!user) return;
+    const supabase = createClient();
+    supabase
+      .from('orders')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .then(({ count }) => setOrderCount(count ?? 0));
+  }, [user]);
 
   const displayName = useMemo(() => {
     if (user?.name) return user.name;
@@ -160,7 +175,7 @@ export default function ProfileView() {
             Meu Perfil
           </h1>
           <p className="font-sans text-sm text-muted-foreground max-w-md">
-            Entre na sua conta para acessar pedidos, preferências e benefícios de membro.
+            Entre na sua conta para acessar pedidos, seu plano e benefícios de membro.
           </p>
         </div>
         <Link
@@ -211,7 +226,7 @@ export default function ProfileView() {
           </div>
           <span className="absolute -bottom-2 -right-2 bg-tertiary text-on-tertiary text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border border-tertiary-container uppercase tracking-wider flex items-center gap-1">
             <Sparkles size={10} />
-            Membro
+            {planLabel}
           </span>
         </div>
 
@@ -265,20 +280,20 @@ export default function ProfileView() {
           className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1 hover:border-primary/30 transition-all cursor-pointer"
         >
           <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-            Desconto Membro
+            Plano {planLabel}
           </span>
-          <span className="font-hanken text-2xl font-bold text-tertiary">5%</span>
+          <span className="font-hanken text-2xl font-bold text-tertiary">{Math.round(discountRate * 100)}%</span>
           <span className="font-sans text-xs text-muted-foreground">
-            em todas as compras
+            desconto em compras
           </span>
         </Link>
         <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
           <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
             Pedidos
           </span>
-          <span className="font-hanken text-2xl font-bold text-foreground">0</span>
+          <span className="font-hanken text-2xl font-bold text-foreground">{orderCount}</span>
           <span className="font-sans text-xs text-muted-foreground">
-            histórico em breve
+            {orderCount === 1 ? 'pedido realizado' : 'pedidos realizados'}
           </span>
         </div>
       </div>

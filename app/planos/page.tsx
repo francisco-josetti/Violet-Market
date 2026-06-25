@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Check, Sparkles, Star, Gem, ArrowRight, Shield, Zap, Truck, Clock, BadgePercent, MessageCircle, Camera, Crown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Check, Sparkles, Star, Gem, ArrowRight, Shield, Zap, Truck, Clock, BadgePercent, MessageCircle, Camera, Crown, Loader2 } from 'lucide-react';
 import { routes } from '@/src/lib/routes';
+import { useAuth } from '@/src/contexts/AuthContext';
+import { selectPlan } from '@/src/lib/plans';
 
 interface PlanFeature {
   text: string;
@@ -58,8 +61,8 @@ const PLANS: Plan[] = [
     ],
   },
   {
-    id: 'soberano',
-    name: 'Soberano',
+    id: 'ultravioleta',
+    name: 'Ultravioleta',
     icon: <Crown size={22} />,
     color: 'text-chart-4',
     borderColor: 'border-chart-4/30',
@@ -83,7 +86,25 @@ function formatPrice(value: number): string {
 }
 
 export default function PlansPage() {
+  const router = useRouter();
+  const { user, refreshUser } = useAuth();
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly');
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const handleSelectPlan = async (planId: string) => {
+    if (!user) {
+      router.push(routes.register);
+      return;
+    }
+    setLoadingPlan(planId);
+    try {
+      await selectPlan(planId);
+      await refreshUser();
+      router.push(routes.catalog);
+    } catch {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <article className="flex-grow py-8 px-4 md:py-12 bg-background min-h-[80vh]">
@@ -180,17 +201,25 @@ export default function PlansPage() {
               ))}
             </ul>
 
-            <Link
-              href={routes.register}
-              className={`w-full py-3.5 rounded-xl font-mono text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-center ${
+            <button
+              type="button"
+              onClick={() => handleSelectPlan(plan.id)}
+              disabled={loadingPlan !== null}
+              className={`w-full py-3.5 rounded-xl font-mono text-xs font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer text-center disabled:opacity-50 ${
                 plan.highlighted
                   ? 'border border-tertiary text-tertiary bg-transparent hover:bg-tertiary hover:text-on-tertiary dark:bg-tertiary dark:text-on-tertiary dark:hover:bg-tertiary/90'
                   : `border ${plan.borderColor} ${plan.color} bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 dark:border-primary`
               }`}
             >
-              Começar agora
-              <ArrowRight size={14} />
-            </Link>
+              {loadingPlan === plan.id ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <>
+                  Começar agora
+                  <ArrowRight size={14} />
+                </>
+              )}
+            </button>
           </div>
         ))}
       </div>

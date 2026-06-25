@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Package, PlusCircle } from 'lucide-react';
+import { Home, Package, PlusCircle, Sparkles } from 'lucide-react';
 import { routes } from '../lib/routes';
 import { useScrollDirection } from '../hooks/useScrollDirection';
 import { useOverlay } from '../contexts/OverlayContext';
@@ -36,6 +36,12 @@ export default function MobileBottomNav() {
       label: 'Catálogo',
       active: isCatalogActive,
     },
+    {
+      href: routes.plans,
+      icon: Sparkles,
+      label: 'Planos',
+      active: pathname === routes.plans,
+    },
   ];
 
   const shouldHide = isOverlayOpen || (direction === 'down' && isScrolled);
@@ -46,7 +52,7 @@ export default function MobileBottomNav() {
         shouldHide ? 'translate-y-full' : 'translate-y-0'
       }`}
     >
-      <div className="flex items-center justify-around h-14 px-4">
+      <div className="flex items-center justify-around h-14 px-1">
         {items.map((item) => (
           <Link
             key={item.label}
@@ -58,9 +64,9 @@ export default function MobileBottomNav() {
             }`}
           >
             <div className={item.accent ? '-mt-1' : undefined}>
-              <item.icon size={item.accent ? 24 : 20} />
+              <item.icon size={item.accent ? 22 : 18} />
             </div>
-            <span className="text-[10px] font-mono tracking-wide leading-none">
+            <span className="text-[9px] font-mono tracking-wide leading-none truncate px-0.5">
               {item.label}
             </span>
             {item.active && (

@@ -14,8 +14,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 function getStoredTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';
   const stored = localStorage.getItem('theme');
-  if (stored === 'light' || stored === 'dark') return stored;
-  if (window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+  if (stored === 'light') return 'light';
   return 'dark';
 }
 

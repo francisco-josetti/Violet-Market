@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, MapPin, ChevronRight, ChevronLeft, Plus, CheckCircle2, Truck, Lock, Tag, Sparkles } from 'lucide-react';
+import { X, MapPin, ChevronRight, ChevronLeft, Plus, CheckCircle2, Truck, Lock, Tag, Sparkles, Loader2 } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 import { useOverlay } from '../contexts/OverlayContext';
 import { loadAddresses, addAddress, fetchAddressByCep, formatCep, sanitizeCep } from '../lib/addresses';
 import { validateCoupon } from '../lib/coupons';
+import { getPlanDiscount } from '../lib/plans';
 import type { Address, PromoCoupon } from '../types';
 
 type Step = 'address' | 'review';
@@ -16,6 +18,7 @@ interface CheckoutOverlayProps {
 
 export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
   const { cart, clearCart } = useCart();
+  const { user } = useAuth();
   const { setOverlayOpen } = useOverlay();
   const [step, setStep] = useState<Step>('address');
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -26,6 +29,7 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
   const [couponError, setCouponError] = useState('');
   const [checkoutComplete, setCheckoutComplete] = useState(false);
   const [trackerId, setTrackerId] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setOverlayOpen(true);
@@ -44,9 +48,10 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) ?? null;
 
   const subtotal = useMemo(() => cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0), [cart]);
-  const vipDiscount = subtotal * 0.05;
-  const couponDiscount = appliedCoupon ? (subtotal - vipDiscount) * (appliedCoupon.discountPercentage / 100) : 0;
-  const total = Math.max(0, subtotal - vipDiscount - couponDiscount);
+  const discountRate = getPlanDiscount(user?.plan);
+  const memberDiscount = subtotal * discountRate;
+  const couponDiscount = appliedCoupon ? (subtotal - memberDiscount) * (appliedCoupon.discountPercentage / 100) : 0;
+  const total = Math.max(0, subtotal - memberDiscount - couponDiscount);
 
   const handleApplyCoupon = async () => {
     const code = couponInput.trim().toUpperCase();
@@ -68,9 +73,43 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
     setShowAddressForm(false);
   };
 
-  const handleConfirmCheckout = () => {
+  const handleConfirmCheckout = async () => {
+    setSaving(true);
     const id = `VM-${Math.floor(100000 + Math.random() * 900000)}-XM`;
     setTrackerId(id);
+
+    try {
+      const { createClient } = await import('../lib/supabase/client');
+      const supabase = createClient();
+      await supabase.from('orders').insert({
+        user_id: user?.id,
+        tracker_id: id,
+        subtotal,
+        discount: memberDiscount + couponDiscount,
+        total,
+        items: cart.map((item) => ({
+          productId: item.product.id,
+          name: item.product.name,
+          price: item.product.price,
+          quantity: item.quantity,
+          imageUrl: item.product.imageUrl,
+        })),
+        address: selectedAddress ? {
+          cep: selectedAddress.cep,
+          street: selectedAddress.street,
+          number: selectedAddress.number,
+          complement: selectedAddress.complement,
+          neighborhood: selectedAddress.neighborhood,
+          city: selectedAddress.city,
+          state: selectedAddress.state,
+        } : null,
+        coupon_code: appliedCoupon?.code ?? null,
+      });
+    } catch (err) {
+      console.error('Erro ao salvar pedido:', err);
+    }
+
+    setSaving(false);
     setCheckoutComplete(true);
     clearCart();
   };
@@ -174,9 +213,10 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
               cart={cart}
               selectedAddress={selectedAddress}
               subtotal={subtotal}
-              vipDiscount={vipDiscount}
+              memberDiscount={memberDiscount}
               couponDiscount={couponDiscount}
               total={total}
+              discountRate={discountRate}
               appliedCoupon={appliedCoupon}
               couponInput={couponInput}
               couponError={couponError}
@@ -204,10 +244,15 @@ export default function CheckoutOverlay({ onClose }: CheckoutOverlayProps) {
             <button
               type="button"
               onClick={handleConfirmCheckout}
-              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+              disabled={saving}
+              className="w-full border border-primary text-primary bg-transparent hover:bg-primary hover:text-primary-foreground dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90 font-mono text-xs font-bold uppercase tracking-wider py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer disabled:opacity-50"
             >
-              <Lock size={14} />
-              Confirmar Pedido
+              {saving ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Lock size={14} />
+              )}
+              {saving ? 'Salvando...' : 'Confirmar Pedido'}
             </button>
           )}
         </div>
@@ -396,9 +441,10 @@ function ReviewStep({
   cart,
   selectedAddress,
   subtotal,
-  vipDiscount,
+  memberDiscount,
   couponDiscount,
   total,
+  discountRate,
   appliedCoupon,
   couponInput,
   couponError,
@@ -409,9 +455,10 @@ function ReviewStep({
   cart: { product: { id: string; name: string; price: number }; quantity: number }[];
   selectedAddress: Address | null;
   subtotal: number;
-  vipDiscount: number;
+  memberDiscount: number;
   couponDiscount: number;
   total: number;
+  discountRate: number;
   appliedCoupon: PromoCoupon | null;
   couponInput: string;
   couponError: string;
@@ -462,8 +509,8 @@ function ReviewStep({
           <span className="text-foreground">R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
         <div className="flex justify-between text-xs font-mono text-muted-foreground">
-          <span>Desconto Membro (5%)</span>
-          <span className="text-tertiary">-R$ {vipDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          <span>Desconto Membro ({Math.round(discountRate * 100)}%)</span>
+          <span className="text-tertiary">-R$ {memberDiscount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
         <div className="flex justify-between text-xs font-mono text-muted-foreground">
           <span>Frete</span>
